@@ -435,10 +435,9 @@ function generateCloudflareWorkersConfig(projectName) {
 async function cleanupOtherPlatformFiles(currentPlatform) {
   const projectRoot = path.join(__dirname, '..');
   
-  // Clean up GitHub Pages/Cloudflare Workers files if not using those platforms
-  // (Both platforms use the same _redirects and _headers format)
-  // These files should ONLY exist for github-pages and cloudflare-workers
-  if (currentPlatform !== 'github-pages' && currentPlatform !== 'cloudflare-workers') {
+  // Clean up _redirects/_headers unless using Cloudflare Workers.
+  // GitHub Pages does not support this format and these files can break Astro builds.
+  if (currentPlatform !== 'cloudflare-workers') {
     const sharedFiles = [
       path.join(projectRoot, 'public', '_redirects'),
       path.join(projectRoot, 'public', '_headers')
@@ -922,9 +921,9 @@ async function generateRedirects() {
         await writeVercelConfig(allRedirects);
         break;
       case 'github-pages':
-        // GitHub Pages: Uses _redirects file for instant HTTP redirects
-        // No Astro config needed - would create slow meta refresh HTML files
-        await writeGitHubPagesConfig(allRedirects);
+        // GitHub Pages: no _redirects/_headers support.
+        // Keep Astro redirects for dev only and deploy static files directly.
+        log.info('ℹ️ Skipping _redirects/_headers generation for GitHub Pages.');
         break;
       case 'cloudflare-workers':
         // Cloudflare Workers: Uses _redirects file for instant HTTP redirects
