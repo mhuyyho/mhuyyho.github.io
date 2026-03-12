@@ -317,7 +317,7 @@ export const siteConfig: SiteConfig = {
     pages: [
       { title: "Posts", url: "/posts/" },
       { title: "Projects", url: "/projects/" },
-      // { title: "Docs", url: "/docs/" },
+      { title: "Docs", url: "/docs/" },
       { title: "About", url: "/about/"},
       { title: "GitHub", url: "https://github.com/mhuyyho" }
     ],
