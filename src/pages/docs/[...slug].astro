@@ -11,13 +11,13 @@ export async function getStaticPaths() {
   }
   
   const docs = await getCollection('docs');
-  const isDev = import.meta.env.DEV;
   
   const paths = [];
   
   // Generate paths for all docs - each .md file is a separate doc
   for (const doc of docs) {
-    if (!shouldShowContent(doc, isDev)) continue;
+    // Always hide draft docs from docs routes, even during local dev.
+    if (!shouldShowContent(doc, false)) continue;
     
     // Use the full doc ID as the slug (e.g., "api" or "sourcetree-and-git-setup")
     const slug = doc.id;
