@@ -73,7 +73,9 @@ export default defineConfig({
         "'self'",
         "https://www.youtube.com",
         "https://giscus.app",
-        "https://platform.twitter.com"
+        "https://platform.twitter.com",
+        "https://docs.google.com",
+        "https://docs.googleusercontent.com"
       ]
     }
   },
