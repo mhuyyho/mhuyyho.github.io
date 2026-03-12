@@ -183,7 +183,7 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   // Site Information
   // [CONFIG:SITE_URL]
-  site: "https://mhuyy.github.io",
+  site: "https://mhuyyho.github.io",
   // [CONFIG:SITE_TITLE]
   title: "Hi 👋",
   // [CONFIG:HOMEPAGE_TITLE]
