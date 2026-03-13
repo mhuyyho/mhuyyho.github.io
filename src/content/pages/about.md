@@ -49,8 +49,8 @@ Experience in identifying and analyzing abnormal network behavior through packet
 - Wireshark  
 - Zeek (Zui)
 
-### Cryptogaphary
-Basic knowledge of cryptogaphary
+### Cryptography
+Basic knowledge of cryptography
 
 **Tools:**
 - Sagemath   
