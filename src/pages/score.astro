@@ -1,5 +1,5 @@
 ---
-const markImageUrl = '/mark/mark.png';
+const scoreImageUrl = '/score/score.png';
 ---
 
 <!doctype html>
@@ -7,7 +7,7 @@ const markImageUrl = '/mark/mark.png';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mark | Ho Minh Huy</title>
+    <title>Score | Ho Minh Huy</title>
     <meta name="robots" content="noindex,nofollow" />
     <style>
       :root {
@@ -28,13 +28,13 @@ const markImageUrl = '/mark/mark.png';
         color: #e2e8f0;
       }
 
-      .mark-wrap {
+      .score-wrap {
         max-width: 980px;
         margin: 0 auto;
         padding: 16px;
       }
 
-      .mark-header {
+      .score-header {
         position: sticky;
         top: 0;
         z-index: 20;
@@ -50,12 +50,12 @@ const markImageUrl = '/mark/mark.png';
         border-radius: 10px;
       }
 
-      .mark-status {
+      .score-status {
         font: 500 14px/1.3 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         color: #cbd5e1;
       }
 
-      .mark-page {
+      .score-page {
         width: 100%;
         border-radius: 10px;
         overflow: hidden;
@@ -64,7 +64,7 @@ const markImageUrl = '/mark/mark.png';
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
       }
 
-      .mark-page img {
+      .score-page img {
         width: 100%;
         height: auto;
         display: block;
@@ -94,14 +94,14 @@ const markImageUrl = '/mark/mark.png';
     </style>
   </head>
   <body>
-    <main class="mark-wrap">
-      <header class="mark-header">
-        <div class="mark-status">Score image preview</div>
-        <a class="fallback" href={markImageUrl} target="_blank" rel="noopener noreferrer">Open Image</a>
+    <main class="score-wrap">
+      <header class="score-header">
+        <div class="score-status">Score image preview</div>
+        <a class="fallback" href={scoreImageUrl} target="_blank" rel="noopener noreferrer">Open Image</a>
       </header>
 
-      <article class="mark-page" aria-label="Score image preview">
-        <img src={markImageUrl} alt="Mark score image" loading="eager" decoding="async" />
+      <article class="score-page" aria-label="Score image preview">
+        <img src={scoreImageUrl} alt="Score image" loading="eager" decoding="async" />
       </article>
     </main>
   </body>
