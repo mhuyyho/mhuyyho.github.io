@@ -103,7 +103,8 @@ async function syncFolderBasedImages(contentType) {
       
       // Check if it's a directory (folder-based content)
       if (stat.isDirectory()) {
-        const targetDir = path.join(publicContentDir, item);
+        // Content routes and IDs are normalized to lowercase, so keep synced assets in lowercase folders too.
+        const targetDir = path.join(publicContentDir, item.toLowerCase());
         
         // Find all media files recursively
         const imageFiles = await findImageFiles(itemPath);

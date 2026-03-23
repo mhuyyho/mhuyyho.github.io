@@ -19,6 +19,7 @@ interface Props {
   decoding?: "async" | "sync" | "auto";
   fetchpriority?: "high" | "low" | "auto";
   densities?: number[];
+  fit?: "cover" | "contain";
 }
 
 const { 
@@ -35,7 +36,8 @@ const {
   loading = "lazy",
   decoding = "async",
   fetchpriority = "auto",
-  densities = [1, 2]
+  densities = [1, 2],
+  fit = "cover"
 } = Astro.props;
 
 const className = Astro.props.class;
@@ -135,8 +137,11 @@ if (isLocal) {
   }
 }
 
-const imageClass = "w-full h-full object-cover";
+const imageClass = `w-full h-full ${fit === "contain" ? "object-contain" : "object-cover"}`;
 const imageStyle = `object-position: ${position}`;
+const fallbackSyncedSrc = isSyncedFolder && cleanSrc
+  ? `${basePath}${cleanSrc}`.replace(/\/+/g, "/")
+  : cleanSrc;
 ---
 
 <div id={id} class:list={[className, 'overflow-hidden relative']}>
@@ -169,8 +174,21 @@ const imageStyle = `object-position: ${position}`;
       data-image-component
     />
   ) : isImageMissing ? (
-    // Don't render anything for missing local images
-    null
+    // Fallback to direct public URL for synced folders if import failed
+    (isSyncedFolder && cleanSrc ? (
+      <img 
+        src={fallbackSyncedSrc}
+        alt={alt} 
+        class={imageClass} 
+        style={imageStyle}
+        loading={loading}
+        decoding={decoding}
+        fetchpriority={fetchpriority}
+        width={width}
+        height={height}
+        data-image-component
+      />
+    ) : null)
   ) : (
     <img 
       src={cleanSrc} 

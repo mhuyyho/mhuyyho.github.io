@@ -19,6 +19,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# LaTeX intermediate files
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex
+*.dvi
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

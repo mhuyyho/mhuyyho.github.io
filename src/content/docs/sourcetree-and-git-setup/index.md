@@ -1,7 +1,7 @@
 ---
 title: SourceTree and Git Setup
 description: Complete guide to setting up SourceTree and Git for your Astro Modular blog
-category: Optional Software
+category: Youtube
 order: 2
 version: 1.0.0
 lastModified: 2024-01-15

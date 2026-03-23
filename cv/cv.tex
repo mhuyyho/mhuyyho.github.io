@@ -1,0 +1,224 @@
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+%	The MIT License (MIT)
+%
+%	Copyright (c) 2021 Jitin Nair
+%
+%	Permission is hereby granted, free of charge, to any person obtaining a copy
+%	of this software and associated documentation files (the "Software"), to deal
+%	in the Software without restriction, including without limitation the rights
+%	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%	copies of the Software, and to permit persons to whom the Software is
+%	furnished to do so, subject to the following conditions:
+%	
+%	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+%	THE SOFTWARE.
+%	
+%
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT DEFINITION
+%----------------------------------------------------------------------------------------
+
+% article class because we want to fully customize the page and not use a cv template
+\documentclass[a4paper,12pt]{article}
+
+%----------------------------------------------------------------------------------------
+%	FONT
+%----------------------------------------------------------------------------------------
+
+% % fontspec allows you to use TTF/OTF fonts directly
+% \usepackage{fontspec}
+% \defaultfontfeatures{Ligatures=TeX}
+
+% % modified for ShareLaTeX use
+% \setmainfont[
+% SmallCapsFont = Fontin-SmallCaps.otf,
+% BoldFont = Fontin-Bold.otf,
+% ItalicFont = Fontin-Italic.otf
+% ]
+% {Fontin.otf}
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES
+%----------------------------------------------------------------------------------------
+\usepackage{url}
+\usepackage{parskip} 	
+
+%other packages for formatting
+\RequirePackage{color}
+\RequirePackage{graphicx}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[scale=0.9]{geometry}
+
+%tabularx environment
+\usepackage{tabularx}
+
+%for lists within experience section
+\usepackage{enumitem}
+
+% centered version of 'X' col. type
+\newcolumntype{C}{>{\centering\arraybackslash}X} 
+
+%to prevent spillover of tabular into next pages
+\usepackage{supertabular}
+\usepackage{tabularx}
+\newlength{\fullcollw}
+\setlength{\fullcollw}{0.47\textwidth}
+
+%custom \section
+\usepackage{titlesec}				
+\usepackage{multicol}
+\usepackage{multirow}
+
+%CV Sections inspired by: 
+%http://stefano.italians.nl/archives/26
+\titleformat{\section}{\Large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{10pt}{10pt}
+
+%for publications
+\usepackage[style=authoryear,sorting=ynt, maxbibnames=2]{biblatex}
+
+%Setup hyperref package, and colours for links
+\usepackage[unicode, draft=false]{hyperref}
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+\hypersetup{colorlinks,breaklinks,urlcolor=linkcolour,linkcolor=linkcolour}
+\addbibresource{citations.bib}
+\setlength\bibitemsep{1em}
+
+%for social icons
+\usepackage{fontawesome5}
+
+%debug page outer frames
+%\usepackage{showframe}
+
+
+% job listing environments
+\newenvironment{jobshort}[2]
+    {
+    \begin{tabularx}{\linewidth}{@{}l X r@{}}
+    \textbf{#1} & \hfill &  #2 \\[3.75pt]
+    \end{tabularx}
+    }
+    {
+    }
+
+\newenvironment{joblong}[2]
+    {
+    \begin{tabularx}{\linewidth}{@{}l X r@{}}
+    \textbf{#1} & \hfill &  #2 \\[3.75pt]
+    \end{tabularx}
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt,label=--]
+    }
+    {
+    \end{itemize}
+    \end{minipage}    
+    }
+
+
+
+%----------------------------------------------------------------------------------------
+%	BEGIN DOCUMENT
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+% non-numbered pages
+\pagestyle{empty} 
+
+%----------------------------------------------------------------------------------------
+%	TITLE
+%----------------------------------------------------------------------------------------
+
+% \begin{tabularx}{\linewidth}{ @{}X X@{} }
+% \huge{Your Name}\vspace{2pt} & \hfill \emoji{incoming-envelope} email@email.com \\
+% \raisebox{-0.05\height}\faGithub\ username \ | \
+% \raisebox{-0.00\height}\faLinkedin\ username \ | \ \raisebox{-0.05\height}\faGlobe \ mysite.com  & \hfill \emoji{calling} number
+% \end{tabularx}
+
+\begin{tabularx}{\linewidth}{@{} C @{}}
+\Huge{Ho Minh Huy} \\[7.5pt]
+\href{https://github.com/username}{\raisebox{-0.05\height}\faGithub\ mhuyyho} \ $|$ \ 
+\href{mailto:mhuyy.ho@gmail.com}{\raisebox{-0.05\height}\faEnvelope\ mhuyy.ho@gmail.com} \ $|$ \ 
+\href{tel:0912404551}{\raisebox{-0.05\height}\faMobile\ 0912.404.551} \ $|$ \ 
+\href{https://mhuyyho.github.io/about/}{\raisebox{-0.05\height}\faGlobe\ mhuyyho.github.io} \\
+\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+% EXPERIENCE SECTIONS
+%----------------------------------------------------------------------------------------
+
+%Interests/ Keywords/ Summary
+\section{Summary}
+I aim to become a SOC Analyst. In the short term, I am seeking an internship opportunity to strengthen my knowledge, gain hands-on experience, and apply what I have learned to real-world scenarios. In the long term, I hope to contribute my skills and experience to the CyberSecurity community, reduce information security incidents in Vietnam.
+
+%----------------------------------------------------------------------------------------
+%	EDUCATION
+%----------------------------------------------------------------------------------------
+\section{Education}
+
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}ll}
+2023 -- present & \textbf{Ho Chi Minh City University of Technology and Education} \\
+                & Major: Information Security \\
+\end{tabular*}
+
+% Activities
+\section{Activities}
+
+\begin{joblong}{Teaching Assistant}{Jan 2025 -- Present}
+\item Courses: Basic Networking, Operating Systems, Information Security.
+\item Supported lecturers in grading labs, reports, and examinations.
+\item Guided students in coursework, lab assignments, and technical questions.
+\end{joblong}
+
+\begin{joblong}{Member, HCMUTE Information Security Club (HISC)}{2024 -- Present}
+\item Actively participated in multiple CTF competitions.
+\item Focused on Cryptography and Forensics challenges.
+\end{joblong}
+
+%Projects
+\section{Projects}
+
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{An information extraction tool from images for digital forensics.} & \hfill \href{https://github.com/raviyelna/Project_Demo}{Link to Project} \\[3.75pt]
+\multicolumn{2}{@{}X@{}}{The tool integrates various utilities (steghide, exiftool), custom-developed tools based on existing algorithms (Shifting Bit Color, PowerShell Extractor, LSB/MSB Extractor, XOR Comparer, Edit Size Picture), and an AI agent (DeepSeek-SDK) to support information processing.}  \\
+\end{tabularx}
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	SKILLS
+%----------------------------------------------------------------------------------------
+\section{Skills}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+Network Analysis &  \normalsize{ Informed in identifying and evaluating anomalous network behavior, performing 
+analysis thorough packet inspection and network traffic. Tools Used: Wireshark, Zui.}\\
+Cryptography & \normalsize{Fundamental knowledge of cryptographic algorithms including AES, RSA, ECC, ECDH, Diffie-Hellman, and lattice-based cryptography. Experience using SageMath for mathematical and cryptographic analysis.} \\
+
+Digital Forensics & \normalsize{Basic understanding of digital forensics including memory and disk analysis. Tools Used: Volatility Framework, Forensics ToolKit (FTK Imager).} \\
+
+Reverse Engineering & \normalsize{Basic knowledge of reverse engineering for PE (Portable Executable) files. Tools Used: IDA Pro, x64dbg, Jetbrain Dotpeek.}
+\\
+Programming  &  \normalsize{Have a basic understanding of C/C++, C\#, Python and Java, along with some knowledge of Data Structure and Algorithms.}
+\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+%	 HONORS AWARDS
+%----------------------------------------------------------------------------------------
+\section{HONORS AWARDS}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+1st place at Sinh vien voi An toan thong tin HCMUTE (HCMUTE CTFs) &  \normalsize{2024 \& 2025}\\
+Participated in the ASEAN Student Contest on Information Security (ASCIS) &  \normalsize{2024}\\
+Participated in the CyberSecurity Student Contest Vietnam (CSCV) &  \normalsize{2025}\\
+\end{tabularx}
+
+\vfill
+\center{\footnotesize Last updated: \today}
+
+\end{document}

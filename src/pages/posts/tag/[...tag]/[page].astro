@@ -179,7 +179,7 @@ const pagination = {
         <!-- Main content -->
         <div class="max-w-none">
           <!-- Posts list -->
-          <div class="space-y-6 mb-12">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 justify-items-center md:justify-items-stretch">
             {paginatedPosts.map((post, index) => (
               <PostCard post={post} context="tags" eager={index < 2} />
             ))}

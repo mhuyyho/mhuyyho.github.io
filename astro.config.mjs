@@ -98,6 +98,9 @@ export default defineConfig({
   '/projects/obsidian-astro-suite': '/projects/vault-cms',
   '/docs/api-reference': '/docs/api',
   '/docs/astro-modular-configuration': '/docs/configuration',
+  '/docs/dll-sideloading': '/docs/dll_sideloading',
+  '/docs/malware-analyze': '/docs/malware_analyze',
+  '/docs/malware-behaviors': '/docs/malware_behaviors',
   '/docs/sourcetree-and-git': '/docs/sourcetree-and-git-setup'
 } : {},
 image: {

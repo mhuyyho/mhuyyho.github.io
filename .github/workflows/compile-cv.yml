@@ -1,0 +1,73 @@
+name: Compile CV to PDF and PNG
+
+on:
+  push:
+    paths:
+      - 'cv/cv.tex'
+      - '.github/workflows/compile-cv.yml'
+  workflow_dispatch:
+
+jobs:
+  compile-cv:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install LaTeX and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-full ghostscript imagemagick poppler-utils
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install pdf2image pillow
+
+      - name: Compile LaTeX to PDF
+        working-directory: ./cv
+        run: |
+          pdflatex -interaction=nonstopmode -file-line-error cv.tex
+          pdflatex -interaction=nonstopmode -file-line-error cv.tex
+
+      - name: Convert PDF to PNG
+        run: |
+          python - <<'EOF'
+          import sys
+          from pdf2image import convert_from_path
+          images = convert_from_path('./cv/cv.pdf', dpi=300)
+          for i, img in enumerate(images):
+              img.save(f'./public/cv/cv_{i+1}.png', 'PNG')
+          print(f"Converted {len(images)} pages to PNG")
+          EOF
+
+      - name: Check for changes
+        id: check_changes
+        working-directory: ./public/cv
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            git status
+          fi
+
+      - name: Configure Git
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git add cv/cv.pdf public/cv/cv_*.png
+          git commit -m "chore: auto-compile CV from cv.tex"
+          git push

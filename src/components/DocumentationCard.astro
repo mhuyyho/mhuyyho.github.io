@@ -1,7 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { formatDate, processMarkdown, isValidDate } from '../utils/markdown';
-import { siteConfig } from '../config';
+import { getOptimizedFormat } from '../utils/images';
+import { getPostCardAspectRatio, siteConfig } from '../config';
 import ImageWrapper from './ImageWrapper.astro';
 import Icon from './Icon.astro';
 
@@ -15,7 +16,7 @@ interface Props {
 const { documentation, featured = false, eager = false, context = 'docs' } = Astro.props;
 
 // Get excerpt from markdown processing
-const { excerpt } = processMarkdown(documentation.body);
+const { excerpt } = processMarkdown(documentation.body || '');
 
 const { title, description: rawDescription, lastModified, image: rawImage, imageAlt, category, version } = documentation.data;
 
@@ -51,113 +52,114 @@ const description = rawDescription || excerpt;
 // Documentation should always show images when available (not controlled by postOptions)
 const shouldShowCoverImage = true;
 
-// Hide images for docs on homepage for cleaner look
-const showCoverImage = shouldShowCoverImage && image && context !== 'home';
+const showCoverImage = shouldShowCoverImage && image;
 ---
 
-<div class="group relative bg-white dark:bg-primary-800 rounded-lg border border-primary-200 dark:border-primary-700 hover:shadow-lg transition-all duration-300 h-full flex flex-col">
-  <a href={`/docs/${documentation.id}`} class="block flex flex-col h-full" aria-label={`View documentation: ${title}`}>
-    <!-- Header with icon and version -->
-    <div class="flex items-center justify-between p-4 pb-2">
-      <Icon name="book-text" class="w-4 h-4 text-primary-500 dark:text-primary-400" />
-      {version && (
-        <span class="text-xs text-primary-500 dark:text-primary-400 font-mono bg-primary-100 dark:bg-primary-700 px-2 py-1 rounded">
-          v{version}
-        </span>
-      )}
-    </div>
-
-    <!-- Cover Image (if exists) -->
+<article class="group h-full flex flex-col" role="article" aria-labelledby={`doc-title-${documentation.id}`}>
+  <a href={`/docs/${documentation.id}`} class="flex flex-col h-full" aria-label={`View documentation: ${title}`}>
     {image && showCoverImage && (
-      <div class="px-4 pb-2">
-        <div class="relative overflow-hidden rounded-md">
-          <ImageWrapper
-            src={(() => {
-              // Clean the image path by removing Obsidian brackets
-              // Remove Obsidian brackets to get the actual image path
-              let cleanImagePath = image;
-              if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
-                cleanImagePath = cleanImagePath.slice(2, -2);
+      <div class="overflow-hidden rounded-t-lg bg-primary-100 dark:bg-primary-800" style={`aspect-ratio: ${getPostCardAspectRatio()};`}>
+        <ImageWrapper
+          src={(() => {
+            // Clean the image path by removing Obsidian brackets
+            let cleanImagePath = image;
+            if (!cleanImagePath || typeof cleanImagePath !== 'string') return '';
+            if (cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
+              cleanImagePath = cleanImagePath.slice(2, -2);
+            }
+            
+            // Handle external URLs
+            if (cleanImagePath.startsWith('http')) {
+              return cleanImagePath;
+            }
+            
+            // Detect folder-based vs file-based: if image path starts with 'attachments/',
+            // it's a single-file doc (shared attachments folder)
+            const isFileBased = cleanImagePath.startsWith('attachments/');
+            
+            if (isFileBased) {
+              // Single-file doc - remove attachments/ prefix
+              cleanImagePath = cleanImagePath.replace('attachments/', '');
+            } else {
+              // Folder-based doc - sync script copies images to doc folder root
+              // Remove 'images/' or 'attachments/' prefixes if present (sync script removes them)
+              if (cleanImagePath.startsWith('images/') || cleanImagePath.startsWith('attachments/')) {
+                cleanImagePath = cleanImagePath.replace(/^(images|attachments)\//, '');
               }
-
-              // Remove Obsidian subfolder prefixes (images/, attachments/)
-              if (typeof cleanImagePath === 'string') {
-                // Remove images/ prefix if present (Obsidian subfolder setting)
-                if (cleanImagePath.startsWith('images/')) {
-                  return cleanImagePath.replace('images/', '');
-                }
-                // Remove attachments/ prefix - basePath will add it back
-                if (cleanImagePath.startsWith('attachments/')) {
-                  return cleanImagePath.replace('attachments/', '');
-                }
-              }
-
-              return cleanImagePath || '';
-            })()}
-            basePath={(() => {
-              // 1. External URLs - no basePath needed
-              if (typeof image === 'string' && image.startsWith('http')) {
-                return '';
-              }
-
-              // 2. Clean the image path to check for attachments/ prefix
-              let cleanImagePath = image;
-              if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
-                cleanImagePath = cleanImagePath.slice(2, -2);
-              }
-
-              // 3. Detect folder-based vs file-based: if image path starts with 'attachments/',
-              // it's a single-file doc (shared attachments folder)
-              if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('attachments/')) {
-                // Single-file doc with image in attachments folder
-                // The sync script copies these to /docs/attachments/
-                return "/docs/attachments/";
-              }
-
-              // 4. Folder-based doc - sync script copies images to doc folder root
-              // Safety check: ensure documentation.id exists before using it
-              if (documentation.id) {
-                return `/docs/${documentation.id}/`;
-              } else {
-                // Fallback to attachments directory if documentation.id is undefined
-                return '/docs/attachments/';
-              }
-            })()}
-            alt={imageAlt || `Cover image for documentation: ${title}`}
-            width={400}
-            height={200}
-            loading={eager ? 'eager' : 'lazy'}
-            fetchpriority={eager ? 'high' : 'auto'}
-            class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
+            }
+            
+            // Convert to WebP if applicable (sync-images.js creates WebP versions)
+            return getOptimizedFormat(cleanImagePath);
+          })()}
+          basePath={(() => {
+            // 1. External URLs - no basePath needed
+            if (typeof image === 'string' && image.startsWith('http')) {
+              return '';
+            }
+            
+            // 2. Clean the image path to check for attachments/ prefix
+            let cleanImagePath = image;
+            if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
+              cleanImagePath = cleanImagePath.slice(2, -2);
+            }
+            
+            // 3. Detect folder-based vs file-based: if image path starts with 'attachments/',
+            // it's a single-file doc (shared attachments folder)
+            if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('attachments/')) {
+              // Single-file doc with image in attachments folder
+              return '/docs/attachments/';
+            }
+            
+            // 4. Folder-based doc - sync script copies images to doc folder root
+            // Safety check: ensure documentation.id exists before using it
+            if (documentation.id) {
+              return `/docs/${documentation.id}/`;
+            } else {
+              // Fallback to attachments directory if documentation.id is undefined
+              return '/docs/attachments/';
+            }
+          })()}
+          alt={imageAlt || `Featured image for documentation: ${title}`}
+          class="w-full h-full group-hover:scale-102 dark:group-hover:brightness-100 transition-all duration-300"
+          width={800}
+          height={450}
+          format="webp"
+          quality={85}
+          loading={eager ? 'eager' : 'lazy'}
+          fetchpriority={eager ? 'high' : 'auto'}
+        />
       </div>
     )}
 
-    <!-- Content -->
-    <div class="p-4 pt-2 flex-grow flex flex-col">
+    <div class="bg-white dark:bg-primary-800 border-l border-r border-b border-primary-200 dark:border-primary-700 p-4 rounded-b-lg flex flex-col flex-grow">
       <!-- Title -->
-      <h3 class="text-lg font-semibold text-primary-900 dark:text-primary-50 mb-2 group-hover:text-highlight-600 dark:group-hover:text-highlight-400 transition-colors line-clamp-2">
+      <h3 id={`doc-title-${documentation.id}`} class="text-lg font-semibold text-primary-900 dark:text-primary-50 mb-2 group-hover:text-highlight-600 dark:group-hover:text-highlight-400 transition-colors line-clamp-2">
         {title}
       </h3>
 
       <!-- Description -->
       {description && (
-        <p class="text-sm text-primary-600 dark:text-primary-300 mb-3 line-clamp-3">
+        <p class="text-sm text-primary-600 dark:text-primary-300 mb-3 line-clamp-2 flex-grow">
           {description}
         </p>
       )}
 
       <!-- Footer -->
-      {lastModified && (
-        <div class="pt-2 border-t border-primary-200 dark:border-primary-700 mt-auto">
-          {isValidDate(lastModified) && (
-            <time datetime={lastModified.toISOString()} class="text-xs text-primary-500 dark:text-primary-400">
-              Updated {formatDate(lastModified)}
+      {(version || lastModified) && (
+        <div class="flex items-center gap-2 text-xs text-primary-500 dark:text-primary-400 mt-auto">
+          {version && (
+            <span class="font-mono">v{version}</span>
+          )}
+          {version && lastModified && (
+            <span>•</span>
+          )}
+          {lastModified && isValidDate(lastModified) && (
+            <time datetime={lastModified.toISOString()}>
+              {formatDate(lastModified)}
             </time>
           )}
         </div>
       )}
     </div>
   </a>
-</div>
+</article>

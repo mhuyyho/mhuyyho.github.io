@@ -1,5 +1,4 @@
 ---
-const cvImageUrl = '/cv/cv_1.png';
 ---
 
 <!doctype html>
@@ -55,6 +54,12 @@ const cvImageUrl = '/cv/cv_1.png';
         color: #cbd5e1;
       }
 
+      .cv-pages {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
       .cv-page {
         width: 100%;
         border-radius: 10px;
@@ -68,6 +73,12 @@ const cvImageUrl = '/cv/cv_1.png';
         width: 100%;
         height: auto;
         display: block;
+      }
+
+      .cv-download-group {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
       }
 
       .fallback {
@@ -96,12 +107,21 @@ const cvImageUrl = '/cv/cv_1.png';
   <body>
     <main class="cv-wrap">
       <header class="cv-header">
-        <div class="cv-status">CV image preview</div>
-        <a class="fallback" href={cvImageUrl} target="_blank" rel="noopener noreferrer">Open Image</a>
+        <div class="cv-status">CV image preview (Page 1 & 2)</div>
+        <div class="cv-download-group">
+          <a class="fallback" href="/cv/cv_1.png" target="_blank" rel="noopener noreferrer">Page 1</a>
+          <a class="fallback" href="/cv/cv_2.png" target="_blank" rel="noopener noreferrer">Page 2</a>
+          <a class="fallback" href="/cv/cv.pdf" target="_blank" rel="noopener noreferrer">PDF</a>
+        </div>
       </header>
 
-      <article class="cv-page" aria-label="CV image preview">
-        <img src={cvImageUrl} alt="CV Ho Minh Huy" loading="eager" decoding="async" />
+      <article class="cv-pages">
+        <div class="cv-page" aria-label="CV Page 1">
+          <img src="/cv/cv_1.png" alt="CV Page 1 - Ho Minh Huy" loading="eager" decoding="async" />
+        </div>
+        <div class="cv-page" aria-label="CV Page 2">
+          <img src="/cv/cv_2.png" alt="CV Page 2 - Ho Minh Huy" loading="lazy" decoding="async" />
+        </div>
       </article>
     </main>
   </body>
