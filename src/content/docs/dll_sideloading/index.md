@@ -1,7 +1,7 @@
 ---
 title: DLL SideLoading
 description: Tổng quan về kỹ thuật tấn công DLL SideLoading và cách hoạt động
-category: Raviyelna
+category: H26V
 order: 2
 version: 1.0.0
 lastModified: 2026-03-23
