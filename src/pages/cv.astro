@@ -102,6 +102,37 @@
         outline: 2px solid #38bdf8;
         outline-offset: 2px;
       }
+
+      .download-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(34, 197, 94, 0.2));
+        color: #38bdf8;
+        font: 500 14px/1.3 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        text-decoration: none;
+        border: 1px solid rgba(56, 189, 248, 0.5);
+        cursor: pointer;
+      }
+
+      .download-btn:hover {
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(34, 197, 94, 0.3));
+        border-color: rgba(56, 189, 248, 0.8);
+      }
+
+      .download-btn:focus-visible {
+        outline: 2px solid #38bdf8;
+        outline-offset: 2px;
+      }
+
+      .download-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+      }
     </style>
   </head>
   <body>
@@ -111,7 +142,14 @@
         <div class="cv-download-group">
           <a class="fallback" href="/cv/cv_1.png" target="_blank" rel="noopener noreferrer">Page 1</a>
           <a class="fallback" href="/cv/cv_2.png" target="_blank" rel="noopener noreferrer">Page 2</a>
-          <a class="fallback" href="/cv/cv.pdf" target="_blank" rel="noopener noreferrer">PDF</a>
+          <a class="download-btn" href="/cv/cv.pdf" download="cv.pdf" title="Download CV as PDF">
+            <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download PDF
+          </a>
         </div>
       </header>
 
