@@ -40,6 +40,10 @@ jobs:
           pdflatex -interaction=nonstopmode -file-line-error cv.tex
           pdflatex -interaction=nonstopmode -file-line-error cv.tex
 
+      - name: Copy PDF to public folder
+        run: |
+          cp ./cv/cv.pdf ./public/cv/cv.pdf
+
       - name: Convert PDF to PNG
         run: |
           python - <<'EOF'
@@ -54,7 +58,7 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if git diff --quiet cv/cv.pdf public/cv/cv_*.png 2>/dev/null; then
+          if git diff --quiet public/cv/cv.pdf public/cv/cv_*.png 2>/dev/null; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -70,7 +74,7 @@ jobs:
       - name: Commit and push changes
         if: steps.check_changes.outputs.changed == 'true'
         run: |
-          git add cv/cv.pdf public/cv/cv_*.png
+          git add public/cv/cv.pdf public/cv/cv_*.png
           git commit -m "chore: auto-compile CV from cv.tex"
           git pull --rebase origin main
           git push
