@@ -17,92 +17,236 @@ featured: true
 aliases:
 
 ---
-## Project Overview
+## 1. Giới thiệu thiết bị
 
-Vault CMS (formerly Obsidian Astro Suite) is a collection of pre-configured Obsidian vaults designed to seamlessly integrate with Astro static sites. It provides a complete content management solution that bridges the gap between note-taking and web publishing, with three optimized vault options: **Default**, **Minimal**, and **Docs**.
+### 1.1 Tổng quan
+TP-Link TL-WN722N là USB Wireless Adapter dùng để kết nối máy tính với mạng Wi-Fi theo chuẩn IEEE 802.11 b/g/n.
 
-## Philosophy
+### 1.2 Thông số kỹ thuật
+- Loại: USB Wireless Adapter  
+- Chuẩn Wi-Fi: 802.11 b/g/n  
+- Tốc độ tối đa: 150 Mbps (2.4 GHz)  
+- Kết nối: USB 2.0  
+- Ăng-ten: 4 dBi (rời, RP-SMA)  
+- Hệ điều hành:  
+  - Windows, Linux, macOS (cũ)
 
-Vault CMS is built on three core principles:
+### 1.3 Công dụng
+- Kết nối Wi-Fi cho máy tính  
+- Tăng khả năng thu sóng  
+- Phục vụ lab bảo mật (pentest)  
 
-1. **Plug-and-play Astro blogging experience** - Pre-configured vaults ready for immediate use
-2. **Emphasis on customization and modularity** - Flexible configuration for different use cases
-3. **Visual parity between backend and frontend** - Seamless workflow from Obsidian to Astro publishing
+---
 
-## Vault Options
+## 2. Các phiên bản phần cứng
 
-### Default
-Optimized for general-purpose Astro blogs, configured for the Slate blog theme.
+| Version | Chipset        | Khả năng Pentest              |
+|--------|---------------|------------------------------|
+| V1     | Atheros AR9271 | Tốt (monitor + injection)    |
+| V2     | Realtek        | Hạn chế                      |
+| V3/V4  | Realtek        | Ít dùng                      |
 
-### Minimal
-Optimized for minimal Astro themes, prioritizing visual minimalism and distraction-free writing, configured for the Chiri theme.
+Thiết bị đang dùng: **V2**
 
-### Docs
-Optimized for Starlight and other documentation-focused Astro themes.
+---
 
-## Included Community Plugins
+## 3. Vai trò trong Wireless Security
 
-### Core Content Management
-- **Astro Composer**: Automated post creation and management with kebab-case slug generation
-- **Bases CMS**: CMS-like homepage using Obsidian Bases for content management
-- **Homepage**: Customizable homepage experience
-- **Default New Tab Page**: CMS-like directory view of all blog posts
+Thiết bị thường dùng trong:
+- Ethical hacking  
+- Wireless pentest  
+- Phân tích Wi-Fi  
 
-### Image & Media Management
-- **Image Inserter**: Pull images from Unsplash or other sources with `CTRL + '`
-- **Paste Image Rename**: Automatic kebab-case, SEO-friendly image renaming
-- **Paste Image Into Property**: Insert images directly into frontmatter properties
+Hỗ trợ:
+- Monitor Mode  
+- Packet Injection  
+- Soft AP  
 
-### Content Organization
-- **Property Over Filename**: Use `title` property as primary identifier instead of filename
-- **Tag Wrangler**: Bulk tag management and organization
+---
 
-### Writing & Editing
-- **Editing Toolbar**: Microsoft Word-style toolbar for markdown editing
-- **SEO**: Content audit tool for search engine optimization
-- **Simple Banner**: Automatic banner display for posts with cover images
+## 4. Kiến thức nền tảng Wi-Fi (IEEE 802.11)
 
-### Theme & Customization
-- **Simple Focus**: Simplify file explorer to relevant directories
-- **Zen Mode**: Full-screen writing mode (`CTRL + SHIFT + Z`)
-- **Status Bar Organizer**: Customize status bar layout
+### 4.1 Wi-Fi là gì
+- Công nghệ mạng không dây dùng sóng RF (Radio Frequency)  
+- Hoạt động theo chuẩn IEEE 802.11  
 
-### Publishing & Workflow
-- **Git**: Optional instant-publish functionality via Git plugin (`CTRL + SHIFT + S`)
-- **Settings Search**: Global search for all Obsidian settings
+### 4.2 Kiến trúc mạng Wi-Fi
+- AP (Access Point): phát Wi-Fi  
+- Client: thiết bị kết nối  
+- SSID (Service Set Identifier): tên mạng  
+- BSSID: MAC của AP  
 
-## Key Features
+### 4.3 Các chuẩn Wi-Fi
 
-- **Plug-and-Play Setup**: Pre-configured vaults ready for immediate use with optimized plugins and settings
-- **CMS-Like Homepage**: "Home Base" view showing all posts in reverse-chronological order with bulk editing
-- **Astro Integration**: Seamless workflow from Obsidian to Astro publishing without link conversion
-- **Optimized Hotkeys**: Custom keyboard shortcuts designed for Astro workflows (see [Vault Guide](/posts/vault-cms-guide))
-- **Git Integration**: Optional instant-publish functionality via Git plugin
-- **Visual Parity**: Oxygen theme matches frontend styling for consistent experience
+| Chuẩn   | Tốc độ        | Băng tần     |
+|--------|--------------|-------------|
+| 802.11b | 11 Mbps       | 2.4 GHz     |
+| 802.11g | 54 Mbps       | 2.4 GHz     |
+| 802.11n | 150–600 Mbps  | 2.4/5 GHz   |
 
-## Default Settings
+### 4.4 Công nghệ chính
 
-- Markdown links used in favor of wikilinks
-- Default location for new notes set per-vault
-- Indentation guides disabled
-- Custom hotkeys optimized for Astro workflows
+- **DSSS (Direct Sequence Spread Spectrum)**:  
+  Công nghệ trong chuẩn 802.11b, trải rộng tín hiệu trên dải tần rộng giúp chống nhiễu tốt và ổn định. Tuy nhiên tốc độ thấp, tối đa khoảng 11 Mbps.
 
-## Technical Implementation
+- **OFDM (Orthogonal Frequency Division Multiplexing)**:  
+  Áp dụng trong 802.11g, chia kênh thành nhiều sóng mang con để truyền song song, giúp tăng tốc độ lên đến 54 Mbps và giảm nhiễu, nhưng phức tạp hơn.
 
-The suite is built on Obsidian's plugin ecosystem and designed to work with Astro's content collections system. It provides a complete development environment for content creators who want to use Obsidian as their primary writing tool, with seamless integration that requires no link conversion or manual configuration.
+- **MIMO (Multiple Input Multiple Output)**:  
+  Dùng trong 802.11n, sử dụng nhiều ăng-ten để truyền nhiều luồng dữ liệu cùng lúc, giúp tăng tốc độ (150–600 Mbps), độ ổn định và phạm vi phủ sóng.
 
-## Installation & Setup
+---
 
-1. Clone or download your Astro theme of choice
-2. Clone or download Vault CMS repository
-3. Open the folder of the version you want (Default, Minimal, or Docs)
-4. Copy the contents into your Astro project's `src/content` folder
-5. Open Obsidian and select "Open folder as vault", choosing the folder with the `.obsidian` directory
+## 5. Frame trong Wi-Fi
 
-## Project Status
+### 5.1 Các loại frame
 
-This project is actively maintained and provides a complete solution for Obsidian-based content management with Astro publishing workflows. The suite is designed to work seamlessly with the above examples and [Astro Modular](https://github.com/davidvkimball/astro-modular) but can be integrated into any Astro project.
+- **Management Frame**
+  - Thiết lập, duy trì và quản lý kết nối  
+  - Bao gồm: phát hiện mạng, xác thực, kết nối  
 
-<a href="https://github.com/davidvkimball/vault-cms" class="no-styling no-underline" target="_blank"><button class="btn btn-primary w-full">  
-    View Project  
-  </button></a>
+- **Control Frame**
+  - Điều khiển truy cập kênh truyền  
+  - Tránh xung đột dữ liệu  
+
+- **Data Frame**
+  - Truyền dữ liệu thực tế (web, email, video)  
+
+### 5.2 Một số frame quan trọng
+
+- **Beacon Frame**
+  - Do AP phát định kỳ  
+  - Chứa SSID, kênh, bảo mật  
+
+- **Probe Request / Probe Response**
+  - Probe Request: client gửi  
+  - Probe Response: AP trả lời  
+
+- **Authentication Frame**
+  - Xác thực giữa client và AP  
+
+- **Association Frame**
+  - Thiết lập kết nối chính thức  
+
+- **Data Frame**
+  - Truyền dữ liệu thực tế  
+
+---
+
+## 6. Monitor Mode
+
+### 6.1 Khái niệm
+Cho phép:
+- Nghe toàn bộ traffic Wi-Fi  
+- Không cần kết nối mạng  
+
+### 6.2 Các chế độ card Wi-Fi
+- Managed Mode  
+- Monitor Mode  
+
+### 6.3 Công cụ
+- Airmon-ng → bật monitor mode  
+- Airodump-ng → scan & capture  
+
+### 6.4 Quy trình
+1. Kiểm tra interface  
+2. Bật monitor mode  
+3. Scan mạng  
+
+---
+
+## 7. Capture WPA/WPA2 Handshake
+
+### 7.1 Khái niệm
+- Quá trình xác thực giữa client và AP  
+- Sinh khóa mã hóa (PTK, GTK)  
+
+### 7.2 4 bước handshake
+1. ANonce  
+2. SNonce  
+3. GTK  
+4. ACK  
+
+### 7.3 Mục đích
+- Crack mật khẩu offline  
+
+### 7.4 Quy trình
+1. Xác định AP  
+2. Capture bằng airodump-ng  
+3. Chờ client kết nối  
+
+---
+
+## 8. Deauthentication Attack
+
+### 8.1 Khái niệm
+- Gửi frame giả để ngắt kết nối client  
+
+### 8.2 Mục đích
+- Bắt handshake  
+- Kiểm tra bảo mật  
+
+### 8.3 Công cụ
+- Aireplay-ng  
+
+### 8.4 Quy trình
+1. Xác định BSSID  
+2. Gửi deauth  
+3. Client reconnect → capture handshake  
+
+---
+
+## 9. Crack Wi-Fi Password
+
+### 9.1 Dictionary Attack
+- Thử mật khẩu từ wordlist  
+
+### 9.2 Công cụ
+- Aircrack-ng  
+
+### 9.3 Quy trình
+1. Có file handshake (.cap)  
+2. Có wordlist  
+3. Chạy aircrack-ng  
+
+### 9.4 Nguyên lý
+- Tạo hash → so sánh với handshake  
+
+---
+
+## 10. Evil Twin Attack
+
+### 10.1 Khái niệm
+- Tạo AP giả giống AP thật  
+
+### 10.2 Mục tiêu
+- Đánh cắp:
+  - Mật khẩu Wi-Fi  
+  - Tài khoản  
+  - Dữ liệu  
+
+### 10.3 Công cụ
+- Airbase-ng  
+- Hostapd  
+- Wifiphisher  
+
+### 10.4 Quy trình
+1. Clone SSID  
+2. Deauth client  
+3. Client kết nối AP giả  
+4. Hiển thị phishing page  
+
+---
+
+## 11. Tổng kết
+
+Thiết bị **TL-WN722N**:
+- Là công cụ phổ biến trong lab Wi-Fi  
+- Hỗ trợ:
+  - Monitor mode  
+  - Packet injection  
+
+Ứng dụng:
+- Phân tích mạng  
+- Kiểm thử bảo mật  
+- Mô phỏng tấn công Wi-Fi  

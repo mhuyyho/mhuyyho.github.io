@@ -5,6 +5,8 @@ on:
     paths:
       - 'cv/cv.tex'
       - '.github/workflows/compile-cv.yml'
+  schedule:
+    - cron: '5 0 * * *'
   workflow_dispatch:
 
 jobs:

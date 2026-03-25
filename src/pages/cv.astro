@@ -140,9 +140,9 @@
       <header class="cv-header">
         <div class="cv-status">CV image preview (Page 1 & 2)</div>
         <div class="cv-download-group">
-          <a class="fallback" href="/cv/cv_1.png" target="_blank" rel="noopener noreferrer">Page 1</a>
-          <a class="fallback" href="/cv/cv_2.png" target="_blank" rel="noopener noreferrer">Page 2</a>
-          <a class="download-btn" href="/cv/cv.pdf" download="cv.pdf" title="Download CV as PDF">
+          <a class="fallback" href="/cv/cv_1.png" data-cv-asset target="_blank" rel="noopener noreferrer">Page 1</a>
+          <a class="fallback" href="/cv/cv_2.png" data-cv-asset target="_blank" rel="noopener noreferrer">Page 2</a>
+          <a class="download-btn" href="/cv/cv.pdf" data-cv-asset download="cv.pdf" title="Download CV as PDF">
             <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
@@ -155,12 +155,36 @@
 
       <article class="cv-pages">
         <div class="cv-page" aria-label="CV Page 1">
-          <img src="/cv/cv_1.png" alt="CV Page 1 - Ho Minh Huy" loading="eager" decoding="async" />
+          <img src="/cv/cv_1.png" data-cv-asset alt="CV Page 1 - Ho Minh Huy" loading="eager" decoding="async" />
         </div>
         <div class="cv-page" aria-label="CV Page 2">
-          <img src="/cv/cv_2.png" alt="CV Page 2 - Ho Minh Huy" loading="lazy" decoding="async" />
+          <img src="/cv/cv_2.png" data-cv-asset alt="CV Page 2 - Ho Minh Huy" loading="lazy" decoding="async" />
         </div>
       </article>
     </main>
+
+    <script>
+      const cacheVersion = Date.now().toString();
+      const withVersion = (url: string): string => {
+        try {
+          const parsed = new URL(url, window.location.origin);
+          parsed.searchParams.set('v', cacheVersion);
+          return parsed.pathname + parsed.search;
+        } catch {
+          return url;
+        }
+      };
+
+      document.querySelectorAll('[data-cv-asset]').forEach((el) => {
+        if (el instanceof HTMLImageElement) {
+          el.src = withVersion(el.src);
+          return;
+        }
+
+        if (el instanceof HTMLAnchorElement) {
+          el.href = withVersion(el.href);
+        }
+      });
+    </script>
   </body>
 </html>
