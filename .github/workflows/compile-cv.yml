@@ -78,5 +78,9 @@ jobs:
         run: |
           git add public/cv/cv.pdf public/cv/cv_*.png
           git commit -m "chore: auto-compile CV from cv.tex"
-          git pull --rebase origin main
+          # LaTeX build also touches cv/cv.pdf and temp files; autostash avoids rebase failure.
+          git pull --rebase --autostash origin main
+          # Keep workspace clean before push.
+          git restore cv/cv.pdf || true
+          rm -f cv/*.aux cv/*.log cv/*.out || true
           git push
