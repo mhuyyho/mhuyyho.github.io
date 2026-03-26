@@ -19,234 +19,217 @@ aliases:
 ---
 ## 1. Giới thiệu thiết bị
 
-### 1.1 Tổng quan
-TP-Link TL-WN722N là USB Wireless Adapter dùng để kết nối máy tính với mạng Wi-Fi theo chuẩn IEEE 802.11 b/g/n.
+### 1.1. Tổng quan
+TP-Link TL-WN722N là một thiết bị USB Wireless Adapter được sử dụng để kết nối máy tính với mạng Wi-Fi. Thiết bị hỗ trợ chuẩn IEEE 802.11 b/g/n, hoạt động chủ yếu trên băng tần 2.4 GHz.
 
-### 1.2 Thông số kỹ thuật
-- Loại: USB Wireless Adapter  
-- Chuẩn Wi-Fi: 802.11 b/g/n  
-- Tốc độ tối đa: 150 Mbps (2.4 GHz)  
-- Kết nối: USB 2.0  
-- Ăng-ten: 4 dBi (rời, RP-SMA)  
-- Hệ điều hành:  
-  - Windows, Linux, macOS (cũ)
+### 1.2. Thông số kỹ thuật
+- Loại thiết bị: USB Wireless Adapter  
+- Chuẩn Wi-Fi: IEEE 802.11 b/g/n  
+- Tốc độ tối đa: 150 Mbps (băng tần 2.4 GHz)  
+- Giao tiếp: USB 2.0  
+- Ăng-ten: 4 dBi (có thể tháo rời, chuẩn RP-SMA)  
+- Hệ điều hành hỗ trợ:  
+  - Windows  
+  - Linux  
+  - macOS (phiên bản cũ)  
 
-### 1.3 Công dụng
-- Kết nối Wi-Fi cho máy tính  
-- Tăng khả năng thu sóng  
-- Phục vụ lab bảo mật (pentest)  
+### 1.3. Công dụng
+Thiết bị TL-WN722N được sử dụng trong nhiều mục đích khác nhau:
+- Kết nối Wi-Fi cho máy tính không có card mạng không dây  
+- Tăng khả năng thu sóng nhờ ăng-ten rời  
+- Ứng dụng trong các phòng lab bảo mật (penetration testing)  
+- Phân tích và kiểm thử hệ thống mạng không dây  
 
 ---
 
 ## 2. Các phiên bản phần cứng
 
-| Version | Chipset        | Khả năng Pentest              |
-|--------|---------------|------------------------------|
-| V1     | Atheros AR9271 | Tốt (monitor + injection)    |
-| V2     | Realtek        | Hạn chế                      |
-| V3/V4  | Realtek        | Ít dùng                      |
+| Version | Chipset           | Khả năng Pentest            |
+|--------|------------------|-----------------------------|
+| V1     | Atheros AR9271   | Tốt (monitor + injection)   |
+| V2     | Realtek          | Hạn chế                     |
+| V3/V4  | Realtek          | Ít dùng                     |
 
-Thiết bị đang dùng: **V2**
-
----
-
-## 3. Vai trò trong Wireless Security
-
-Thiết bị thường dùng trong:
-- Ethical hacking  
-- Wireless pentest  
-- Phân tích Wi-Fi  
-
-Hỗ trợ:
-- Monitor Mode  
-- Packet Injection  
-- Soft AP  
+- Thiết bị đang dùng là: **V2**
 
 ---
 
-## 4. Kiến thức nền tảng Wi-Fi (IEEE 802.11)
+## 3. Kiến thức nền tảng Wi-Fi (IEEE 802.11)
 
-### 4.1 Wi-Fi là gì
+### 3.1. Wi-Fi là gì
 - Công nghệ mạng không dây dùng sóng RF (Radio Frequency)  
 - Hoạt động theo chuẩn IEEE 802.11  
 
-### 4.2 Kiến trúc mạng Wi-Fi
+### 3.2. Kiến trúc mạng Wi-Fi
 - AP (Access Point): phát Wi-Fi  
 - Client: thiết bị kết nối  
 - SSID (Service Set Identifier): tên mạng  
 - BSSID: MAC của AP  
 
-### 4.3 Các chuẩn Wi-Fi
+### 3.3. Các chuẩn Wi-Fi
 
-| Chuẩn   | Tốc độ        | Băng tần     |
-|--------|--------------|-------------|
-| 802.11b | 11 Mbps       | 2.4 GHz     |
-| 802.11g | 54 Mbps       | 2.4 GHz     |
-| 802.11n | 150–600 Mbps  | 2.4/5 GHz   |
+| Chuẩn   | Tốc độ     | Băng tần |
+|--------|------------|----------|
+| 802.11b | 11 Mbps   | 2.4 GHz  |
+| 802.11g | 54 Mbps   | 2.4 GHz  |
+| 802.11n | 150–600 Mbps | 2.4/5 GHz |
 
-### 4.4 Công nghệ chính
+### 3.4. Công nghệ chính
 
-- **DSSS (Direct Sequence Spread Spectrum)**:  
-  Công nghệ trong chuẩn 802.11b, trải rộng tín hiệu trên dải tần rộng giúp chống nhiễu tốt và ổn định. Tuy nhiên tốc độ thấp, tối đa khoảng 11 Mbps.
+#### 3.4.1. DSSS (Direct Sequence Spread Spectrum)
+- Sử dụng trong chuẩn 802.11b  
+- Trải rộng tín hiệu để chống nhiễu tốt  
+- Tốc độ tối đa ~11 Mbps  
 
-- **OFDM (Orthogonal Frequency Division Multiplexing)**:  
-  Áp dụng trong 802.11g, chia kênh thành nhiều sóng mang con để truyền song song, giúp tăng tốc độ lên đến 54 Mbps và giảm nhiễu, nhưng phức tạp hơn.
+**Ví dụ:**  
+`1 → 101110101`  
 
-- **MIMO (Multiple Input Multiple Output)**:  
-  Dùng trong 802.11n, sử dụng nhiều ăng-ten để truyền nhiều luồng dữ liệu cùng lúc, giúp tăng tốc độ (150–600 Mbps), độ ổn định và phạm vi phủ sóng.
+#### 3.4.2. OFDM (Orthogonal Frequency Division Multiplexing)
+- Sử dụng trong chuẩn 802.11g  
+- Chia dữ liệu thành nhiều phần nhỏ, truyền song song  
+- Tốc độ lên đến 54 Mbps  
 
----
+**Ví dụ:**  
+`ABCDEFGH → A, B, C, D...`  
 
-## 5. Frame trong Wi-Fi
-
-### 5.1 Các loại frame
-
-- **Management Frame**
-  - Thiết lập, duy trì và quản lý kết nối  
-  - Bao gồm: phát hiện mạng, xác thực, kết nối  
-
-- **Control Frame**
-  - Điều khiển truy cập kênh truyền  
-  - Tránh xung đột dữ liệu  
-
-- **Data Frame**
-  - Truyền dữ liệu thực tế (web, email, video)  
-
-### 5.2 Một số frame quan trọng
-
-- **Beacon Frame**
-  - Do AP phát định kỳ  
-  - Chứa SSID, kênh, bảo mật  
-
-- **Probe Request / Probe Response**
-  - Probe Request: client gửi  
-  - Probe Response: AP trả lời  
-
-- **Authentication Frame**
-  - Xác thực giữa client và AP  
-
-- **Association Frame**
-  - Thiết lập kết nối chính thức  
-
-- **Data Frame**
-  - Truyền dữ liệu thực tế  
+#### 3.4.3. MIMO (Multiple Input Multiple Output)
+- Sử dụng trong chuẩn 802.11n  
+- Dùng nhiều ăng-ten truyền nhiều luồng dữ liệu  
+- Tốc độ 150–600 Mbps  
 
 ---
 
-## 6. Monitor Mode
+## 4. Frame trong Wi-Fi
 
-### 6.1 Khái niệm
-Cho phép:
-- Nghe toàn bộ traffic Wi-Fi  
+### 4.1. Các loại frame
+- Management Frame → thiết lập & quản lý kết nối  
+- Control Frame → điều khiển truy cập kênh truyền  
+- Data Frame → truyền dữ liệu người dùng  
+
+### 4.2. Một số frame quan trọng
+- Beacon Frame → AP phát định kỳ  
+- Probe Request / Probe Response → tìm mạng  
+- Authentication Frame → xác thực  
+- Association Frame → kết nối  
+- Data Frame → dữ liệu thực tế  
+
+---
+
+## 5. Monitor Mode
+
+### 5.1. Khái niệm
+- Cho phép nghe toàn bộ traffic Wi-Fi  
 - Không cần kết nối mạng  
 
-### 6.2 Các chế độ card Wi-Fi
+### 5.2. Các chế độ card Wi-Fi
 - Managed Mode  
 - Monitor Mode  
 
-### 6.3 Công cụ
-- Airmon-ng → bật monitor mode  
-- Airodump-ng → scan & capture  
+### 5.3. Công cụ
+- `airmon-ng` → bật monitor mode  
+- `airodump-ng` → scan & capture  
 
-### 6.4 Quy trình
+### 5.4. Quy trình
 1. Kiểm tra interface  
 2. Bật monitor mode  
 3. Scan mạng  
 
+### 5.5. Cài driver hỗ trợ monitor
+
+```bash
+sudo apt update
+sudo apt install -y dkms git build-essential
+
+git clone https://github.com/aircrack-ng/rtl8188eus
+cd rtl8188eus
+
+sudo make dkms_install
+echo "blacklist r8188eu" | sudo tee /etc/modprobe.d/realtek.conf
+sudo reboot
+
+iwconfig
+
+sudo airmon-ng check kill
+sudo airmon-ng start wlan0
+```
+
 ---
 
-## 7. Capture WPA/WPA2 Handshake
+## 6. Capture WPA/WPA2 Handshake
 
-### 7.1 Khái niệm
+### 6.1. Khái niệm
 - Quá trình xác thực giữa client và AP  
 - Sinh khóa mã hóa (PTK, GTK)  
 
-### 7.2 4 bước handshake
+### 6.2. 4 bước handshake
 1. ANonce  
 2. SNonce  
 3. GTK  
 4. ACK  
 
-### 7.3 Mục đích
-- Crack mật khẩu offline  
+### 6.3. Mục đích
+- Dùng để crack mật khẩu offline  
 
-### 7.4 Quy trình
+### 6.4. Quy trình
 1. Xác định AP  
-2. Capture bằng airodump-ng  
-3. Chờ client kết nối  
+
+2. Capture:
+```bash
+sudo airodump-ng wlan0
+```
+
+→ Lấy BSSID và Channel  
+
+3. Chờ client connect:
+```bash
+sudo airodump-ng -c 11 --bssid AA:BB:CC:DD:EE:FF -w capture wlan0
+```
+
+4. Sau khi bắt được handshake → file `.cap`  
+→ Dùng để crack password  
+- Thành công nếu password nằm trong wordlist  
 
 ---
 
-## 8. Deauthentication Attack
+## 7. Deauthentication Attack
 
-### 8.1 Khái niệm
+### 7.1. Khái niệm
 - Gửi frame giả để ngắt kết nối client  
 
-### 8.2 Mục đích
+### 7.2. Mục đích
 - Bắt handshake  
 - Kiểm tra bảo mật  
 
-### 8.3 Công cụ
-- Aireplay-ng  
+### 7.3. Công cụ
+- `aireplay-ng`  
 
-### 8.4 Quy trình
+### 7.4. Quy trình
 1. Xác định BSSID  
 2. Gửi deauth  
 3. Client reconnect → capture handshake  
 
----
 
-## 9. Crack Wi-Fi Password
+Gửi frame giả để ngắt kết nối đối với toàn bộ user trong mạng:
+```bash
+sudo aireplay-ng --deauth 10 -a AA:BB:CC:DD:EE:FF wlan0
+```
 
-### 9.1 Dictionary Attack
-- Thử mật khẩu từ wordlist  
-
-### 9.2 Công cụ
-- Aircrack-ng  
-
-### 9.3 Quy trình
-1. Có file handshake (.cap)  
-2. Có wordlist  
-3. Chạy aircrack-ng  
-
-### 9.4 Nguyên lý
-- Tạo hash → so sánh với handshake  
+Gửi frame giả để ngắt kết nối đối với 1 user nhất định trong mạng:
+```bash
+sudo aireplay-ng --deauth 10 -a AA:BB:CC:DD:EE:FF -c CLIENT_MAC wlan0
+```
 
 ---
 
-## 10. Evil Twin Attack
+## 8. Tổng kết
 
-### 10.1 Khái niệm
-- Tạo AP giả giống AP thật  
-
-### 10.2 Mục tiêu
-- Đánh cắp:
-  - Mật khẩu Wi-Fi  
-  - Tài khoản  
-  - Dữ liệu  
-
-### 10.3 Công cụ
-- Airbase-ng  
-- Hostapd  
-- Wifiphisher  
-
-### 10.4 Quy trình
-1. Clone SSID  
-2. Deauth client  
-3. Client kết nối AP giả  
-4. Hiển thị phishing page  
-
----
-
-## 11. Tổng kết
-
-Thiết bị **TL-WN722N**:
-- Là công cụ phổ biến trong lab Wi-Fi  
+### 8.1. Thiết bị TL-WN722N
+- Công cụ phổ biến trong lab Wi-Fi  
 - Hỗ trợ:
   - Monitor mode  
   - Packet injection  
 
-Ứng dụng:
+### 8.2. Ứng dụng
 - Phân tích mạng  
 - Kiểm thử bảo mật  
 - Mô phỏng tấn công Wi-Fi  
