@@ -43,23 +43,39 @@ Outside of technology, I enjoy spending time with **cats and dogs** 🐱🐶 so 
 ## 🛠 Skills
 
 ### Network Analysis
-Experience in identifying and analyzing abnormal network behavior through packet inspection and traffic analysis.
+Informed in identifying and evaluating anomalous network behavior, performing analysis through packet inspection and network traffic.
 
-**Tools:**
-- Wireshark  
-- Zeek (Zui)
+**Tools Used:**
+- Wireshark
+- Zui
 
 ### Cryptography
-Basic knowledge of cryptography
+Fundamental knowledge of cryptographic algorithms including AES, RSA, ECC, ECDH, Diffie-Hellman, and lattice-based cryptography. Experience using SageMath for mathematical and cryptographic analysis.
 
-**Tools:**
-- Sagemath   
+**Tools Used:**
+- SageMath
+
+### Digital Forensics
+Basic understanding of digital forensics including memory and disk analysis.
+
+**Tools Used:**
+- Volatility Framework
+- FTK Imager
+
+### Reverse Engineering
+Basic knowledge of reverse engineering for PE (Portable Executable) files.
+
+**Tools Used:**
+- IDA Pro
+- x64dbg
+- JetBrains dotPeek
 
 ### Programming
-Basic knowledge of programming and problem-solving.
+Have a basic understanding of C/C++, C#, Python, and Java, along with some knowledge of Data Structures and Algorithms.
 
 **Languages:**
 - C / C++
+- C#
 - Python
 - Java
 
