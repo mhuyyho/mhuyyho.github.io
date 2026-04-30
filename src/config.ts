@@ -317,7 +317,6 @@ export const siteConfig: SiteConfig = {
     pages: [
       { title: "Posts", url: "/posts/" },
       { title: "Projects", url: "/projects/" },
-      { title: "Docs", url: "/docs/" },
       { title: "About", url: "/about/"},
       { title: "GitHub", url: "https://github.com/mhuyyho" }
     ],
@@ -341,7 +340,7 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:OPTIONAL_CONTENT_TYPES_PROJECTS]
     projects: true, // Enable projects section
     // [CONFIG:OPTIONAL_CONTENT_TYPES_DOCS]
-    docs: true, // Enable documentation section
+    docs: false, // Disable documentation section and /docs routes
   },
 
   // Home Options
@@ -368,7 +367,7 @@ export const siteConfig: SiteConfig = {
     },
     docs: {
       // [CONFIG:HOME_OPTIONS_DOCS_ENABLED]
-      enabled: true, // Show featured docs on homepage
+      enabled: false, // Hide featured docs on homepage
       // [CONFIG:HOME_OPTIONS_DOCS_COUNT]
       count: 3, // Number of docs to show
     },

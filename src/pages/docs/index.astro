@@ -14,18 +14,7 @@ import Icon from '@/components/Icon.astro';
 let fallbackPage = null;
 
 if (!siteConfig.optionalContentTypes.docs) {
-  // Check for fallback page in pages collection
-  try {
-    fallbackPage = await getEntry('pages', 'docs');
-    if (fallbackPage) {
-      // PageLayout will handle the rendering
-    } else {
-      return Astro.redirect('/404');
-    }
-  } catch (error) {
-    // No fallback page found, redirect to 404
-    return Astro.redirect('/404');
-  }
+  return Astro.redirect('/404');
 }
 
 // Get all docs
