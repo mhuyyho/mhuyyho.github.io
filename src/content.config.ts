@@ -128,6 +128,32 @@ const docsCollection = defineCollection({
   }),
 });
 
+// Define schema for research articles
+const researchCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/research' }),
+  schema: z.object({
+    title: z.string().default('Untitled Research'),
+    description: z.string().nullable().optional().default('No description provided'),
+    date: z.coerce.date().default(() => new Date()),
+    image: z.any().nullable().optional().transform((val) => {
+      // Handle various Obsidian syntax formats
+      if (Array.isArray(val)) {
+        return val[0] || null;
+      }
+      if (typeof val === 'string') {
+        return val;
+      }
+      return null;
+    }),
+    imageAlt: z.string().nullable().optional(),
+    hideCoverImage: z.boolean().optional(),
+    hideTOC: z.boolean().optional(),
+    showTOC: z.boolean().optional(),
+    draft: z.boolean().optional(),
+    noIndex: z.boolean().optional(),
+  }),
+});
+
 // Define schema for special home pages (homepage blurb, 404, projects index, docs index)
 const specialCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/special' }),
@@ -146,6 +172,7 @@ export const collections = {
   pages: pagesCollection,
   projects: projectsCollection,
   docs: docsCollection,
+  research: researchCollection,
   special: specialCollection,
 };
 

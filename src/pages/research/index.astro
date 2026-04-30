@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config';
+import { generatePostsListSEO } from '@/utils/seo';
+import { formatDate, formatDateMobile, shouldShowContent, isValidDate } from '@/utils/markdown';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const isDev = import.meta.env.DEV;
+const allResearch = await getCollection('research' as any) as any[];
+const visibleResearch = allResearch
+  .filter(item => shouldShowContent(item, isDev))
+  .sort((a, b) => {
+    const dateA = isValidDate(a.data.date) ? a.data.date : new Date(0);
+    const dateB = isValidDate(b.data.date) ? b.data.date : new Date(0);
+    return dateB.getTime() - dateA.getTime();
+  });
+
+const seoData = generatePostsListSEO(import.meta.env.SITE || '', undefined);
+seoData.title = `Research | ${siteConfig.title}`;
+seoData.description = `Browse research notes on ${siteConfig.title}`;
+seoData.canonical = `${siteConfig.site}/research`;
+seoData.noIndex = false;
+---
+
+<BaseLayout seoData={seoData}>
+  <div class="py-8 relative">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8" style={`max-width: ${siteConfig.layout.contentWidth}`}>
+      <header class="mb-8 md:mb-12">
+        <h1 class="text-3xl font-bold text-primary-900 dark:text-primary-50 mb-3">Research</h1>
+        <p class="text-primary-600 dark:text-primary-300 max-w-2xl">
+          Các bài research của tôi sẽ được đăng tại đây.
+        </p>
+      </header>
+
+      {visibleResearch.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {visibleResearch.map((research) => (
+            <article class="group rounded-lg border border-primary-200 dark:border-primary-700 bg-primary-50 dark:bg-primary-900 shadow-sm hover:shadow-md transition-shadow">
+              <a href={`/research/${research.id}`} class="block p-5 h-full" aria-label={`Open research: ${research.data.title}`}>
+                <div class="text-sm text-primary-500 dark:text-primary-400 mb-2">
+                  <time datetime={research.data.date.toISOString()}>
+                    <span class="hidden sm:inline">{formatDate(research.data.date)}</span>
+                    <span class="sm:hidden">{formatDateMobile(research.data.date)}</span>
+                  </time>
+                </div>
+                <h2 class="text-xl font-semibold text-primary-900 dark:text-primary-50 mb-2 group-hover:text-highlight-600 dark:group-hover:text-highlight-400 transition-colors">
+                  {research.data.title}
+                </h2>
+                <p class="text-primary-600 dark:text-primary-300 leading-relaxed">
+                  {research.data.description || 'Chưa có mô tả.'}
+                </p>
+              </a>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="rounded-lg border border-dashed border-primary-300 dark:border-primary-700 bg-primary-50/60 dark:bg-primary-900/40 p-8 text-center">
+          <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50 mb-2">Chưa có research nào</h2>
+          <p class="text-primary-600 dark:text-primary-300">Hãy thêm file markdown mới vào src/content/research/ để xuất bản bài nghiên cứu.</p>
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>

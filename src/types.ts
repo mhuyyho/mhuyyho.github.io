@@ -17,6 +17,10 @@ export type Docs = CollectionEntry<"docs">;
 
 export type DocsData = CollectionEntry<"docs">["data"];
 
+export type Research = CollectionEntry<"research">;
+
+export type ResearchData = CollectionEntry<"research">["data"];
+
 export interface Heading {
   depth: number;
   slug: string;

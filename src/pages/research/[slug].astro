@@ -1,0 +1,66 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import { siteConfig } from '@/config';
+import { shouldShowContent, formatDate, isValidDate } from '@/utils/markdown';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allResearch = await getCollection('research' as any) as any[];
+  const isDev = import.meta.env.DEV;
+
+  return allResearch
+    .filter(item => shouldShowContent(item, isDev))
+    .map(item => ({
+      params: { slug: item.id },
+      props: { research: item },
+    }));
+};
+
+const { research } = Astro.props as { research: any };
+
+if (!research) {
+  return Astro.redirect('/research/');
+}
+
+const isDev = import.meta.env.DEV;
+if (!shouldShowContent(research, isDev)) {
+  return Astro.redirect('/research/');
+}
+
+const { Content } = await render(research as any);
+
+const seoData = {
+  title: `${research.data.title} | ${siteConfig.title}`,
+  description: research.data.description || `Research: ${research.data.title}`,
+  canonical: Astro.url.href,
+  ogType: 'article' as const,
+  noIndex: research.data.noIndex || false,
+};
+---
+
+<BaseLayout seoData={seoData}>
+  <article class="py-8 relative">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8" style={`max-width: ${siteConfig.layout.contentWidth}`}>
+      <header class="mb-8">
+        <p class="text-sm text-primary-500 dark:text-primary-400 mb-3">
+          <time datetime={research.data.date.toISOString()}>
+            {isValidDate(research.data.date) ? formatDate(research.data.date) : ''}
+          </time>
+        </p>
+        <h1 class="text-3xl font-bold text-primary-900 dark:text-primary-50 mb-3">
+          {research.data.title}
+        </h1>
+        {research.data.description && (
+          <p class="text-lg text-primary-600 dark:text-primary-300 max-w-3xl">
+            {research.data.description}
+          </p>
+        )}
+      </header>
+
+      <div class="prose dark:prose-dark max-w-none" id="research-content">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
