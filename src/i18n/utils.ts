@@ -168,6 +168,8 @@ export function canonicalUrl(pathname: string): string {
 /** Pretty label for the language switcher. */
 export function localeLabel(locale: Locale): string {
   switch (locale) {
+    case 'fr':
+      return 'Français';
     case 'en':
     default:
       return 'English';
@@ -177,6 +179,8 @@ export function localeLabel(locale: Locale): string {
 /** ISO BCP 47 language tag for `<html lang>` and date formatters. */
 export function htmlLang(locale: Locale): string {
   switch (locale) {
+    case 'fr':
+      return 'fr-FR';
     case 'en':
     default:
       return 'en-US';

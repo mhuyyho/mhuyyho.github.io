@@ -148,10 +148,7 @@ export async function getCategoriesWithCount(
 }
 
 /** Group posts by year -> month for the archives page. */
-export function groupByYearMonth(
-  posts: Post[],
-  _locale: Locale,
-): Array<{
+export function groupByYearMonth(posts: Post[]): Array<{
   year: number;
   months: Array<{ month: number; label: string; posts: Post[] }>;
 }> {

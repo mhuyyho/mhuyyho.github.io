@@ -1,5 +1,5 @@
 /**
- * UI dictionaries — English only (multilingual disabled).
+ * UI dictionaries for supported locales.
  */
 
 import type { Locale } from '../config';
@@ -101,6 +101,103 @@ export const messages = {
     'footer.theme': 'Theme',
     'footer.privacy': 'Privacy Policy',
     'footer.copyright': 'All rights reserved.',
+  },
+  fr: {
+    'site.skipToContent': 'Passer au contenu',
+    'nav.home': 'Accueil',
+    'nav.posts': 'Articles',
+    'nav.tags': 'Tags',
+    'nav.categories': 'Catégories',
+    'nav.archives': 'Archives',
+    'nav.cv': 'CV',
+    'nav.about': 'À propos',
+    'nav.search': 'Recherche',
+    'nav.toggleMenu': 'Afficher le menu',
+
+    'theme.toggle': 'Changer le thème',
+    'theme.light': 'Clair',
+    'theme.dark': 'Sombre',
+    'theme.system': 'Système',
+
+    'lang.switcher': 'Langue',
+    'lang.en': 'Anglais',
+    'lang.fr': 'Français',
+
+    'post.publishedOn': 'Publié le',
+    'post.updatedOn': 'Mis à jour le',
+    'post.readingTime': 'min de lecture',
+    'post.toc': 'Table des matières',
+    'post.tags': 'Tags',
+    'post.categories': 'Catégories',
+    'post.previous': 'Précédent',
+    'post.next': 'Suivant',
+    'post.comments': 'Commentaires',
+    'post.commentsDisabled': 'Les commentaires sont désactivés pour cet article.',
+    'post.commentsSetupTitle': 'Les commentaires nécessitent une configuration',
+    'post.commentsSetupBody':
+      'Giscus est activé mais pas encore configuré. Ajoutez les informations du dépôt ci-dessous pour commencer à collecter les commentaires.',
+    'post.commentsSetupStep1':
+      'Visitez `giscus.app` et sélectionnez votre dépôt GitHub public (Discussions doit être activé).',
+    'post.commentsSetupStep2':
+      'Copiez les valeurs générées `data-repo-id`, `data-category` et `data-category-id`.',
+    'post.commentsSetupStep3':
+      'Définissez les variables d’environnement `PUBLIC_GISCUS_ENABLED`, `PUBLIC_GISCUS_REPO`, `PUBLIC_GISCUS_REPO_ID`, `PUBLIC_GISCUS_CATEGORY` et `PUBLIC_GISCUS_CATEGORY_ID` dans votre fichier `.env`.',
+    'post.commentsSetupStep4':
+      'Rebuild the site — ce message sera remplacé par le fil de commentaires en direct.',
+    'post.commentsSetupDocs': 'Ouvrir giscus.app',
+    'post.share': 'Partager',
+    'post.copyLink': 'Copier le lien',
+    'post.copied': 'Copié !',
+    'post.author': 'Auteur',
+
+    'list.allPosts': 'Tous les articles',
+    'list.empty': 'Aucun article trouvé.',
+    'list.tagPosts': 'Articles tagués',
+    'list.categoryPosts': 'Articles dans',
+    'list.totalPosts': 'articles',
+    'list.totalPostsOne': 'article',
+
+    'pagination.previous': 'Page précédente',
+    'pagination.next': 'Page suivante',
+    'pagination.page': 'Page',
+    'pagination.of': 'sur',
+
+    'archives.title': 'Archives',
+    'archives.empty': 'Aucun article pour le moment.',
+
+    'tags.title': 'Tags',
+    'tags.empty': 'Aucun tag pour le moment.',
+
+    'categories.title': 'Catégories',
+    'categories.empty': 'Aucune catégorie pour le moment.',
+
+    'search.title': 'Recherche',
+    'search.placeholder': 'Rechercher sur le site',
+    'search.openLabel': 'Ouvrir la recherche',
+    'search.closeLabel': 'Fermer la recherche',
+    'search.empty': 'Aucun résultat.',
+    'search.loading': 'Chargement de la recherche…',
+    'search.typeToStart': 'Tapez pour rechercher…',
+    'search.hintShortcut': 'Appuyez sur / n’importe où pour ouvrir la recherche',
+    'search.searching': 'Recherche…',
+    'search.noResultsFor': 'Aucun résultat pour',
+    'search.resultsCount': 'résultats',
+    'search.resultsCountOne': 'résultat',
+    'search.hintNavigate': 'pour naviguer',
+    'search.hintSelect': 'pour ouvrir',
+    'search.clearLabel': 'Effacer',
+
+    'code.copy': 'Copier',
+    'code.copied': 'Copié',
+
+    '404.title': 'Page introuvable',
+    '404.description': 'La page que vous recherchez s’est envolée.',
+    '404.cta': 'Retour à l’accueil',
+
+    'footer.poweredBy': 'Propulsé par',
+    'footer.theme': 'Thème',
+    'footer.privacy': 'Politique de confidentialité',
+    'footer.copyright': 'Tous droits réservés.',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
