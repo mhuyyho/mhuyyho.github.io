@@ -1,12 +1,15 @@
+/// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
 
-declare global {
-  const __SITE_CONFIG__: any;
-}
-
 interface ImportMetaEnv {
-  readonly GOOGLE_ANALYTICS_ID: string;
-  readonly API_KEY: string;
+  readonly SITE_URL?: string;
+  readonly CI_SKIP_CONTENT_COLLECTIONS?: string;
+  readonly CI_SKIP_RSS_SITEMAP?: string;
+  readonly PUBLIC_GISCUS_ENABLED?: string;
+  readonly PUBLIC_GISCUS_REPO?: string;
+  readonly PUBLIC_GISCUS_REPO_ID?: string;
+  readonly PUBLIC_GISCUS_CATEGORY?: string;
+  readonly PUBLIC_GISCUS_CATEGORY_ID?: string;
 }
 
 interface ImportMeta {

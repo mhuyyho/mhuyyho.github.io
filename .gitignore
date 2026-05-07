@@ -1,60 +1,40 @@
-# Dependencies
-node_modules/
-.pnpm-store/
-cli/node_modules/
-
-# Build
+# build output
 dist/
+.output/
+.vercel/
+.netlify/
+
+# generated types
 .astro/
 
-# Environment variables
-.env
-.env.local
-.env.production
+# dependencies
+node_modules/
 
-# Logs
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-# LaTeX intermediate files
-*.aux
-*.log
-*.out
-*.fls
-*.fdb_latexmk
-*.synctex.gz
-*.synctex
-*.dvi
+# environment variables
+.env
+.env.local
+.env.production
+.env.development
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# editor
+.idea/
 
-# Temporary files
-*.tmp
-*.temp
-.temp/
-.ref/
-
-# OS generated files
-Thumbs.db
-ehthumbs.db
+# os
 .DS_Store
+Thumbs.db
 
-# Obsidian workspace files
-src/content/.obsidian/workspace.json
-src/content/.obsidian/workspace-mobile.json
-obsidian_askpass.sh
+# bun
+bun.lockb
+.bun-cache/
 
-# Generated deployment platform files (GitHub Pages + Cloudflare Workers only)
-public/_redirects
-public/_headers
+# pagefind cache
+pagefind/
+
+# misc
+*.log

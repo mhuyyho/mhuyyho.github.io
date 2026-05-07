@@ -1,230 +1,316 @@
-import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import sitemap from '@astrojs/sitemap';
+// @ts-check
+import { defineConfig, fontProviders, svgoOptimizer } from 'astro/config';
+import process from 'node:process';
+import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import mdx from '@astrojs/mdx';
-import { remarkInternalLinks, remarkFolderImages, remarkImageCaptions } from './src/utils/internallinks.ts';
-import remarkCallouts from './src/utils/remark-callouts.ts';
-import remarkImageGrids from './src/utils/remark-image-grids.ts';
-import remarkMermaid from './src/utils/remark-mermaid.ts';
-import { remarkObsidianEmbeds } from './src/utils/remark-obsidian-embeds.ts';
-import remarkBases from './src/utils/remark-bases.ts';
-import remarkInlineTags from './src/utils/remark-inline-tags.ts';
-import { remarkObsidianComments } from './src/utils/remark-obsidian-comments.ts';
-import remarkObsidianImageSize from './src/utils/remark-obsidian-image-size.ts';
-import remarkMath from 'remark-math';
-import remarkReadingTime from 'remark-reading-time';
-import remarkToc from 'remark-toc';
-import remarkBreaks from 'remark-breaks';
-import rehypeKatex from 'rehype-katex';
-import rehypeMark from './src/utils/rehype-mark.ts';
-import rehypeImageAttributes from './src/utils/rehype-image-attributes.ts';
-import { rehypeNormalizeAnchors } from './src/utils/rehype-normalize-anchors.ts';
+import sitemap from '@astrojs/sitemap';
+import icon from 'astro-icon';
+import expressiveCode from 'astro-expressive-code';
+import tailwindcss from '@tailwindcss/vite';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import { siteConfig } from './src/config.ts';
-import swup from '@swup/astro';
-import refreshContentOnChange from './src/integrations/refresh-content-on-change.ts';
-import { fileURLToPath } from 'node:url';
+import rehypeExternalLinks from 'rehype-external-links';
+import rehypeKatex from 'rehype-katex';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import { remarkAsHtml } from './src/plugins/remark-ashtml.ts';
+import { remarkAlert } from './src/plugins/remark-alert.ts';
 
-// Deployment platform configuration
-const DEPLOYMENT_PLATFORM = process.env.DEPLOYMENT_PLATFORM || siteConfig.deployment.platform || 'netlify';
+import { SITE } from './src/config';
 
-export default defineConfig({
-  site: siteConfig.site,
-  deployment: {
-    platform: DEPLOYMENT_PLATFORM
-  },
-  csp: {
-    scriptDirective: {
-      resources: [
-        "'self'",
-        "'unsafe-inline'",
-        "https://unpkg.com",
-        "https://cdnjs.cloudflare.com",
-        "https://cdn.jsdelivr.net",
-        "https://giscus.app",
-        "https://platform.twitter.com"
-      ]
-    },
-    styleDirective: {
-      resources: [
-        "'self'",
-        "'unsafe-inline'",
-        "https://fonts.googleapis.com",
-        "https://cdnjs.cloudflare.com"
-      ]
-    },
-    fontDirective: {
-      resources: [
-        "'self'",
-        "data:",
-        "https://fonts.gstatic.com",
-        "https://cdnjs.cloudflare.com"
-      ]
-    },
-    imgDirective: {
-      resources: ["'self'", "data:", "https:"]
-    },
-    connectDirective: {
-      resources: ["'self'", "https://giscus.app"]
-    },
-    frameDirective: {
-      resources: [
-        "'self'",
-        "https://www.youtube.com",
-        "https://giscus.app",
-        "https://platform.twitter.com",
-        "https://docs.google.com",
-        "https://docs.googleusercontent.com"
-      ]
-    }
-  },
-  devToolbar: {
-    enabled: true
-  },
-  redirects: (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'build') ? {
-  '/about-me': '/about',
-  '/about-us': '/about',
-  '/contact-me': '/contact',
-  '/contact-us': '/contact',
-  '/privacy': '/privacy-policy',
-  '/posts/mermaid-test': '/posts/obsidian-embeds-demo',
-  '/posts/mermaid-diagram-test': '/posts/obsidian-embeds-demo',
-  '/posts/mermaid-diagrams': '/posts/obsidian-embeds-demo',
-  '/posts/astro-suite-vault-modular-guide': '/posts/vault-cms-guide',
-  '/posts/astro-suite-obsidian-vault-guide-astro-modular': '/posts/vault-cms-guide',
-  '/posts/obsidian-vault-guide': '/posts/vault-cms-guide',
-  '/projects/obsidian-astro-composer': '/projects/astro-composer',
-  '/projects/obsidian-astro-suite': '/projects/vault-cms',
-  '/docs/api-reference': '/docs/api',
-  '/docs/astro-modular-configuration': '/docs/configuration',
-  '/docs/dll-sideloading': '/docs/dll_sideloading',
-  '/docs/malware-analyze': '/docs/malware_analyze',
-  '/docs/malware-behaviors': '/docs/malware_behaviors',
-  '/docs/sourcetree-and-git': '/docs/sourcetree-and-git-setup'
-} : {},
-image: {
-    service: {
-      entrypoint: 'astro/assets/services/sharp',
-      config: {
-        limitInputPixels: false,
-      }
-    },
-    remotePatterns: [{
-      protocol: 'https'
-    }]
-  },
-  integrations: [
-    refreshContentOnChange(),
-    tailwind(),
-    sitemap(),
-    mdx(),
-    swup({
-      theme: false,
-      animationClass: 'transition-swup-',
-      containers: ['#swup-container'],
-      smoothScrolling: false,
-      cache: process.env.NODE_ENV === 'production', // off in dev so post edits show immediately
-      preload: true,
-      accessibility: false,
-      updateHead: true,
-      updateBodyClass: false,
-      globalInstance: true,
-      plugins: [], // Disable all plugins including scroll
-      skipPopStateHandling: (event) => {
-        // ALWAYS skip Swup handling for back/forward navigation
-        // Let the browser handle it naturally
-        return true;
+// For a GitHub user site (mhuyyho.github.io), the site lives at the root — no subpath needed.
+// BASE_PATH stays '/' in all environments.
+const rawBase = (process.env.BASE_PATH ?? '/').replace(/\/$/, '');
+const BASE = rawBase.startsWith('/') ? rawBase : `/${rawBase}`;
+const SITEMAP_XSL_HREF = `${BASE}/sitemap/styles.xsl`;
+const SKIP_RSS_SITEMAP = process.env.CI_SKIP_RSS_SITEMAP === 'true';
+
+/**
+ * Tiny inline integration: after `@astrojs/sitemap` runs, rewrite the
+ * absolute XSL `href` it emits (always prefixed with `site`, e.g.
+ * `https://aneejian.com/sitemap/styles.xsl`) to a root-relative path.
+ *
+ * Why: a root-relative href works in BOTH environments
+ *   - production: same origin as the sitemap, browsers apply the XSL
+ *   - `bun serve` / preview: same origin (localhost), no cross-origin
+ *     XSLT block (which renders as a blank page in browsers).
+ *
+ * Crawlers ignore `<?xml-stylesheet ?>` entirely, so SEO is unaffected.
+ */
+function rewriteSitemapXslToRelative() {
+  return {
+    name: 'chirpy:rewrite-sitemap-xsl',
+    hooks: {
+      'astro:build:done': (/** @type {{ dir: URL }} */ { dir }) => {
+        const distDir = fileURLToPath(dir);
+        const files = readdirSync(distDir).filter(
+          (f) => f.startsWith('sitemap') && f.endsWith('.xml'),
+        );
+        for (const file of files) {
+          const path = join(distDir, file);
+          const xml = readFileSync(path, 'utf8');
+          const fixed = xml.replace(
+            /<\?xml-stylesheet\b[^?]*\?>/,
+            `<?xml-stylesheet type="text/xsl" href="${SITEMAP_XSL_HREF}"?>`,
+          );
+          if (fixed !== xml) writeFileSync(path, fixed);
+        }
       },
-      // Simplified link selector for better compatibility
-      linkSelector: 'a[href]:not([data-no-swup]):not([href^="mailto:"]):not([href^="tel:"])'
-    })
-  ],
-  markdown: {
-      remarkPlugins: [
-      remarkObsidianImageSize, // Parse Obsidian image size syntax first
-      remarkInternalLinks,
-      remarkInlineTags,
-      remarkObsidianComments, // Remove Obsidian comments (%%...%%) early in processing
-      remarkFolderImages,
-      remarkObsidianEmbeds,
-      // Bases directive (table-only v1)
-      remarkBases,
-      remarkImageCaptions,
-      remarkMath,
-      remarkCallouts,
-      remarkBreaks,
-      remarkImageGrids,
-      remarkMermaid,
-      [remarkReadingTime, {}],
-      [remarkToc, {
-        tight: true,
-        ordered: false,
-        maxDepth: 3,
-        heading: 'contents|table[ -]of[ -]contents?|toc'
-      }],
+    },
+  };
+}
+
+// https://astro.build/config
+export default defineConfig({
+  site: SITE.url,
+  // GitHub Pages serves the project at https://<user>.github.io/<repo>/,
+  // so production builds need `base` to match that subpath — every
+  // generated asset URL (CSS, JS, images, favicons) is prefixed with it.
+  //
+  // In `bun run dev`, however, we want the site to open at plain
+  // `http://localhost:4321/` for a friction-free local experience. The
+  // `BASE_PATH` env var (read from `.env`) lets each environment opt in:
+  //   - `.env` (committed empty / unset)         → dev runs at `/`
+  //   - CI / Pages workflow sets BASE_PATH=/chirping-astro for the build
+  //
+  // In source code, always build absolute paths through `withBase()` /
+  // `localizedPath()` in `src/i18n/utils.ts` so they pick up this value
+  // automatically (via `import.meta.env.BASE_URL`).
+  base: process.env.BASE_PATH ?? '/',
+  trailingSlash: 'ignore',
+  build: {
+    format: 'directory',
+  },
+
+  // Image optimization (https://docs.astro.build/en/guides/images/).
+  //
+  // - Local images imported from `src/` (or `src/assets/`) are optimized
+  //   automatically by `astro:assets`.
+  // - Images in `public/` are copied as-is and CANNOT be transformed.
+  // - Remote URLs must match a `remotePatterns` entry below before they
+  //   can be passed to `<Image>` / `<Picture>` for optimization.
+  //
+  // The default Sharp service generates modern formats (WebP/AVIF) and
+  // responsive `srcset`s. With `responsiveStyles: true` and a default
+  // `layout`, every `<Image layout="...">` automatically gets the right
+  // `width`/`height`/`object-fit` styles applied.
+  image: {
+    layout: 'constrained',
+    responsiveStyles: true,
+    remotePatterns: [
+      // Unsplash (used by demo posts).
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      // Common CDNs many users plug in. Extend or trim as needed.
+      { protocol: 'https', hostname: '**.githubusercontent.com' },
+      { protocol: 'https', hostname: 'cdn.jsdelivr.net' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'https', hostname: 'imagedelivery.net' },
     ],
+  },
+
+  // i18n config: EN is default and serves at root (no prefix), FR served at /fr.
+  // We rely on filesystem routing (src/pages and src/pages/[...locale]) for the actual
+  // routes, but still expose locales here so integrations like sitemap can
+  // generate hreflang alternates correctly.
+  i18n: {
+    locales: [...SITE.locales],
+    defaultLocale: SITE.defaultLocale,
+    routing: {
+      prefixDefaultLocale: false,
+      redirectToDefaultLocale: false,
+    },
+  },
+
+  markdown: {
+    // `remark-math` parses `$inline$` and `$$display$$` blocks into MDAST
+    // math nodes; `rehype-katex` converts them to pre-rendered HTML at
+    // build time so no JavaScript is shipped to the client.
+    //
+    // The accompanying KaTeX stylesheet (`katex/dist/katex.min.css`) is
+    // loaded ONLY on pages that opt in via `math: true` in frontmatter,
+    // through `<MathStyles />` in the post / page layouts. This keeps the
+    // CSS (~25kB gzipped) off pages that don't need it.
+    remarkPlugins: [remarkAlert, remarkAsHtml, remarkGfm, remarkMath],
     rehypePlugins: [
       rehypeKatex,
-      rehypeMark,
-      rehypeImageAttributes,
-      [rehypeSlug, {
-        test: (node) => node.tagName !== 'h1'
-      }],
-      [rehypeAutolinkHeadings, {
-        behavior: 'wrap',
-        test: (node) => node.tagName !== 'h1',
-        properties: {
-          className: ['anchor-link'],
-          ariaLabel: 'Link to this section'
-        }
-      }],
-      rehypeNormalizeAnchors, // Run LAST to ensure className and href fixes aren't overridden
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: 'wrap',
+          properties: {
+            className: ['heading-anchor'],
+            ariaHidden: 'true',
+            tabIndex: -1,
+          },
+        },
+      ],
+      [
+        rehypeExternalLinks,
+        {
+          target: '_blank',
+          rel: ['nofollow', 'noopener', 'noreferrer'],
+        },
+      ],
     ],
-    shikiConfig: {
-      theme: 'github-dark',
-      wrap: true
-    }
+    gfm: true,
   },
-  vite: {
-    assetsInclude: ['**/*.base', '**/*.home', '**/*.base'],
-    resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-        '@/components': fileURLToPath(new URL('./src/components', import.meta.url)),
-        '@/layouts': fileURLToPath(new URL('./src/layouts', import.meta.url)),
-        '@/utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
-        '@/types': fileURLToPath(new URL('./src/types.ts', import.meta.url)),
-        '@/config': fileURLToPath(new URL('./src/config.ts', import.meta.url))
-      }
-    },
-    server: {
-      host: 'localhost',
-      port: 5000,
-      strictPort: false, // Allow fallback to 5001 if 5000 is occupied (e.g., AirPlay on macOS)
-      allowedHosts: [],
-      middlewareMode: false,
-      hmr: true,
-      watch: {
-        ignored: ['**/.obsidian/**', '**/_bases/**', '**/bases/**'],
-        usePolling: process.platform === 'win32',
-        interval: 1000
+
+  integrations: [
+    icon({
+      // Astro-Icon will tree-shake from @iconify-json/lucide so only the
+      // icons actually referenced make it into the build.
+      iconDir: 'src/icons',
+    }),
+    // Expressive Code provides syntax highlighting (Shiki under the hood)
+    // plus extra features: code-block frames + titles, copy button, line
+    // markers, diffs, word wrap, collapsible sections.
+    // https://expressive-code.com/
+    expressiveCode({
+      themes: ['github-light', 'github-dark-dimmed'],
+      // Bind the active theme to our `<html data-theme>` attribute instead
+      // of the default `prefers-color-scheme` media query so the theme
+      // toggle in the sidebar takes effect immediately.
+      themeCssSelector: (theme) =>
+        `[data-theme='${theme.type === 'dark' ? 'chirpy-dark' : 'chirpy-light'}']`,
+      useDarkModeMediaQuery: false,
+      shiki: {
+        langAlias: {
+          env: 'dotenv',
+        },
       },
-      headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0'
-        // CSP headers are handled by src/middleware.ts for all routes
-      }
-    },
-    define: {
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-      'process.env.ASTRO_CONTENT_COLLECTION_CACHE': 'false'
-    },
-    optimizeDeps: {
-      exclude: ['astro:content']
-    },
-    exclude: ['**/_redirects', '**/_headers']
+      styleOverrides: {
+        borderRadius: '0.5rem',
+        codeFontFamily:
+          "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+        codeFontSize: '0.875rem',
+        frames: {
+          shadowColor: 'transparent',
+        },
+      },
+    }),
+    // MDX must come after Expressive Code so EC can transform fenced
+    // code blocks inside .mdx files too.
+    mdx(),
+    ...(SKIP_RSS_SITEMAP
+      ? []
+      : [
+          sitemap({
+            i18n: {
+              defaultLocale: SITE.defaultLocale,
+              locales: Object.fromEntries(SITE.locales.map((l) => [l, l])),
+            },
+            // Browsers (and only browsers) apply this XSL to render a
+            // human-readable view of `sitemap-index.xml` and `sitemap-0.xml`.
+            // Search-engine crawlers ignore the processing instruction.
+            // Note: `@astrojs/sitemap` rewrites this into an ABSOLUTE URL using
+            // `site`. The `rewriteSitemapXslToRelative()` integration below
+            // turns it back into a root-relative path so local preview works.
+            xslURL: SITEMAP_XSL_HREF,
+            filter: (page) => !page.includes('/draft/') && !page.endsWith('/404/'),
+          }),
+          rewriteSitemapXslToRelative(),
+        ]),
+  ],
+
+  vite: {
+    plugins: [tailwindcss()],
   },
-  build: {
-    assets: '_assets'
-  }
+
+  experimental: {
+    contentIntellisense: true,
+    // Astro 6.2.x still exposes SVG optimization as an experimental flag.
+    // The 6.2 change renamed the old `experimental.svgo` flag to the new
+    // `experimental.svgOptimizer` API; it is not a stable top-level config yet.
+    svgOptimizer: svgoOptimizer({
+      multipass: true,
+    }),
+  },
+
+  fonts: [
+    // Source Sans 3 — main UI font from @fontsource/source-sans-3 npm package
+    {
+      name: 'Source Sans 3',
+      cssVariable: '--font-source-sans-3',
+      provider: fontProviders.local(),
+      options: {
+        variants: [
+          {
+            weight: '400',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/source-sans-3/files/source-sans-3-latin-400-normal.woff2',
+            ],
+          },
+          {
+            weight: '600',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/source-sans-3/files/source-sans-3-latin-600-normal.woff2',
+            ],
+          },
+          {
+            weight: '700',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/source-sans-3/files/source-sans-3-latin-700-normal.woff2',
+            ],
+          },
+          {
+            weight: '900',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/source-sans-3/files/source-sans-3-latin-900-normal.woff2',
+            ],
+          },
+        ],
+      },
+    },
+    // Lato — secondary font from @fontsource/lato npm package
+    {
+      name: 'Lato',
+      cssVariable: '--font-lato',
+      provider: fontProviders.local(),
+      options: {
+        variants: [
+          {
+            weight: '300',
+            style: 'normal',
+            src: ['./node_modules/@fontsource/lato/files/lato-latin-300-normal.woff2'],
+          },
+          {
+            weight: '400',
+            style: 'normal',
+            src: ['./node_modules/@fontsource/lato/files/lato-latin-400-normal.woff2'],
+          },
+        ],
+      },
+    },
+    // JetBrains Mono — monospace font from @fontsource/jetbrains-mono npm package
+    {
+      name: 'JetBrains Mono',
+      cssVariable: '--font-jetbrains-mono',
+      provider: fontProviders.local(),
+      options: {
+        variants: [
+          {
+            weight: '400',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2',
+            ],
+          },
+          {
+            weight: '600',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2',
+            ],
+          },
+        ],
+      },
+    },
+  ],
 });

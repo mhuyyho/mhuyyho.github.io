@@ -1,178 +1,98 @@
-import { defineCollection, z } from 'astro:content';
+/**
+ * Content Collections (Astro v6 loader API).
+ *
+ * Folder convention: `src/content/<collection>/<locale>/**`
+ *  - posts/en/**  -> EN posts
+ *  - posts/fr/**  -> FR posts
+ *  - pages/en/**  -> EN static pages (about, etc.)
+ *  - pages/fr/**  -> FR static pages
+ *
+ * The locale is derived from the file path so authors do not need to set it
+ * manually (but they may override it in frontmatter).
+ */
+
+import { defineCollection, type SchemaContext } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'zod';
 
-// Define schema for blog posts
-const postsCollection = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
-  schema: z.object({
-    title: z.string().default('Untitled Post'),
-    description: z.string().nullable().optional().default('No description provided'),
-    date: z.coerce.date().default(() => new Date()),
-    tags: z.array(z.string()).nullable().optional(),
-    draft: z.boolean().optional(),
-    image: z.any().nullable().optional().transform((val) => {
-      // Handle various Obsidian syntax formats
-      if (Array.isArray(val)) {
-        // Handle array format from [[...]] syntax - take first element
-        return val[0] || null;
-      }
-      if (typeof val === 'string') {
-        // Handle string format - return as-is
-        return val;
-      }
-      return null;
-    }),
-    imageOG: z.boolean().optional(),
-    imageAlt: z.string().nullable().optional(),
-    hideCoverImage: z.boolean().optional(),
-    hideTOC: z.boolean().optional(),
-    showTOC: z.boolean().optional(),
-    targetKeyword: z.string().nullable().optional(),
-    author: z.string().nullable().optional(),
-    noIndex: z.boolean().optional(),
+import { SITE } from './config';
+
+const localeEnum = z.enum(SITE.locales as unknown as [string, ...string[]]);
+
+/**
+ * Build the post / page frontmatter schema.
+ *
+ * `heroImage` accepts THREE shapes:
+ *   1. An imported asset via `image()` — a path RELATIVE TO THE
+ *      MARKDOWN FILE pointing into `src/assets/...`. Astro resolves
+ *      it through its image pipeline (WebP, responsive `srcset`,
+ *      width/height inferred). This is the recommended option.
+ *   2. A public path (e.g. `/images/foo.jpg`) — copied as-is, NOT
+ *      optimized.
+ *   3. An external URL (https://…) — optimized at build if the host
+ *      is allow-listed in `image.remotePatterns` in `astro.config.mjs`.
+ */
+const baseFrontmatter = ({ image }: SchemaContext) =>
+  z.object({
+    title: z.string().min(1).max(140),
+    description: z.string().min(1).max(280),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    tags: z.array(z.string()).default([]),
+    categories: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+    heroImage: z.union([image(), z.string()]).optional(),
+    /** Optional alt-text for the hero/featured image. */
+    heroImageAlt: z.string().optional(),
+    /** Per-post override of SITE.showFeaturedImages (cards + hero). */
+    showFeaturedImage: z.boolean().optional(),
+    /** Per-post override of SITE.dynamicPostCardHeight on listing cards. */
+    dynamicPostCardHeight: z.boolean().optional(),
+    canonicalURL: z.url().optional(),
+    comments: z.boolean().optional(),
+    toc: z.boolean().default(true),
+    /** Pin to top of listings. */
+    pinned: z.boolean().default(false),
+    /**
+     * Opt in to LaTeX math rendering (KaTeX). When `true`, the layout
+     * loads `katex.min.css` only on this page so the stylesheet stays
+     * off posts/pages that don't use math.
+     */
+    math: z.boolean().default(false),
+    /** Optional locale override; otherwise inferred from path. */
+    lang: localeEnum.optional(),
+    /**
+     * Maps translated variants together. Posts that share a translationKey
+     * across locales are considered translations of each other and the
+     * language switcher will jump between them on the same article.
+     *
+     * If omitted, falls back to the file slug (relative to the locale folder).
+     */
+    translationKey: z.string().optional(),
+  });
+
+export type PostFrontmatter = z.infer<ReturnType<typeof baseFrontmatter>>;
+
+const posts = defineCollection({
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './src/content/posts',
   }),
+  schema: baseFrontmatter,
 });
 
-// Define schema for static pages
-const pagesCollection = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
-  schema: z.object({
-    title: z.string().default('Untitled Page'),
-    description: z.string().nullable().optional().default('No description provided'),
-    draft: z.boolean().optional(),
-    lastModified: z.coerce.date().optional(),
-    image: z.any().nullable().optional().transform((val) => {
-      // Handle various Obsidian syntax formats
-      if (Array.isArray(val)) {
-        // Handle array format from [[...]] syntax - take first element
-        return val[0] || null;
-      }
-      if (typeof val === 'string') {
-        // Handle string format - return as-is
-        return val;
-      }
-      return null;
-    }),
-    imageAlt: z.string().nullable().optional(),
-    hideCoverImage: z.boolean().optional(),
-    hideTOC: z.boolean().optional(),
-    showTOC: z.boolean().optional(),
-    noIndex: z.boolean().optional(),
+const pages = defineCollection({
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './src/content/pages',
   }),
+  schema: (ctx) =>
+    baseFrontmatter(ctx)
+      .partial({ pubDate: true })
+      .extend({
+        /** Pages don't paginate or appear in archives. */
+        showInNav: z.boolean().default(false),
+      }),
 });
 
-// Define schema for projects
-const projectsCollection = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
-  schema: z.object({
-    title: z.string().default('Untitled Project'),
-    description: z.string().nullable().optional().default('No description provided'),
-    date: z.coerce.date().default(() => new Date()),
-    categories: z.array(z.string()).nullable().optional().default([]),
-    repositoryUrl: z.union([z.string(), z.null(), z.undefined()]).optional().transform(val => val || ''),
-    projectUrl: z.union([z.string(), z.null(), z.undefined()]).optional().transform(val => val || ''),
-    demoUrl: z.union([z.string(), z.null(), z.undefined()]).optional().transform(val => val || ''),
-    demoURL: z.union([z.string(), z.null(), z.undefined()]).optional().transform(val => val || ''),
-    status: z.string().nullable().optional(),
-    image: z.any().nullable().optional().transform((val) => {
-      // Handle various Obsidian syntax formats
-      if (Array.isArray(val)) {
-        // Handle array format from [[...]] syntax - take first element
-        return val[0] || null;
-      }
-      if (typeof val === 'string') {
-        // Handle string format - return as-is
-        return val;
-      }
-      return null;
-    }),
-    imageAlt: z.string().nullable().optional(),
-    hideCoverImage: z.boolean().optional(),
-    hideTOC: z.boolean().optional(),
-    showTOC: z.boolean().optional(),
-    draft: z.boolean().optional(),
-    noIndex: z.boolean().optional(),
-    featured: z.boolean().optional(),
-  }),
-});
-
-// Define schema for docs
-const docsCollection = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/docs' }),
-  schema: z.object({
-    title: z.string().default('Untitled Documentation'),
-    description: z.string().nullable().optional().default('No description provided'),
-    category: z.string().nullable().optional().default('General'),
-    order: z.number().default(0),
-    lastModified: z.coerce.date().optional(),
-    version: z.string().nullable().optional(),
-    image: z.any().nullable().optional().transform((val) => {
-      // Handle various Obsidian syntax formats
-      if (Array.isArray(val)) {
-        // Handle array format from [[...]] syntax - take first element
-        return val[0] || null;
-      }
-      if (typeof val === 'string') {
-        // Handle string format - return as-is
-        return val;
-      }
-      return null;
-    }),
-    imageAlt: z.string().nullable().optional(),
-    hideCoverImage: z.boolean().optional(),
-    hideTOC: z.boolean().optional(),
-    draft: z.boolean().optional(),
-    noIndex: z.boolean().optional(),
-    showTOC: z.boolean().optional(),
-    featured: z.boolean().optional(),
-  }),
-});
-
-// Define schema for research articles
-const researchCollection = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/research' }),
-  schema: z.object({
-    title: z.string().default('Untitled Research'),
-    description: z.string().nullable().optional().default('No description provided'),
-    date: z.coerce.date().default(() => new Date()),
-    image: z.any().nullable().optional().transform((val) => {
-      // Handle various Obsidian syntax formats
-      if (Array.isArray(val)) {
-        return val[0] || null;
-      }
-      if (typeof val === 'string') {
-        return val;
-      }
-      return null;
-    }),
-    imageAlt: z.string().nullable().optional(),
-    hideCoverImage: z.boolean().optional(),
-    hideTOC: z.boolean().optional(),
-    showTOC: z.boolean().optional(),
-    draft: z.boolean().optional(),
-    noIndex: z.boolean().optional(),
-  }),
-});
-
-// Define schema for special home pages (homepage blurb, 404, projects index, docs index)
-const specialCollection = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/special' }),
-  schema: z.object({
-    title: z.string().default('Untitled Page'),
-    description: z.string().nullable().optional().default('No description provided'),
-    hideTOC: z.boolean().optional(),
-    // These pages have fixed URLs and special logic
-    // URLs are determined by the file location, not frontmatter
-  }),
-});
-
-// Export collections
-export const collections = {
-  posts: postsCollection,
-  pages: pagesCollection,
-  projects: projectsCollection,
-  docs: docsCollection,
-  research: researchCollection,
-  special: specialCollection,
-};
-
+export const collections = { posts, pages };

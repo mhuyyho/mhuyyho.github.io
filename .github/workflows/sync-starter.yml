@@ -1,0 +1,95 @@
+name: Sync Starter Template
+
+on:
+  workflow_run:
+    workflows: ['PR Checks']
+    branches: [main]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Sync to Starter Repo
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+        with:
+          path: source
+
+      - name: Checkout starter repo
+        shell: bash
+        env:
+          STARTER_TOKEN: ${{ secrets.STARTER_REPO_TOKEN }}
+        run: |
+          git clone "https://x-access-token:${STARTER_TOKEN}@github.com/kannansuresh/chirping-astro-starter.git" starter 2>/dev/null || {
+            mkdir starter && cd starter
+            git init -b main
+            git remote add origin "https://x-access-token:${STARTER_TOKEN}@github.com/kannansuresh/chirping-astro-starter.git"
+          }
+
+      - name: Sync files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Clean starter (preserve .git)
+          find starter -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+
+          # Copy explicitly included items from .starter-include
+          while IFS= read -r pattern || [ -n "$pattern" ]; do
+            # Ignore empty lines and comments
+            [[ -z "$pattern" || "$pattern" =~ ^# ]] && continue
+
+            # Since pattern might be a glob (like .prettierrc*), we expand it
+            for file in source/$pattern; do
+              [ -e "$file" ] || continue
+              cp -r "$file" starter/
+            done
+          done < source/.starter-include
+
+          # Copy core project files
+          # Strip Husky and lint-staged from the starter's package.json
+          jq 'del(.scripts.prepare, .devDependencies.husky, .devDependencies["lint-staged"], ."lint-staged")' source/package.json > starter/package.json
+
+          # Copy .env.example (without CI-only flags)
+          grep -v '^CI_SKIP_' source/.env.example > starter/.env.example || cp source/.env.example starter/.env.example
+
+          # Remove demo posts (replaced by starter sample)
+          rm -rf starter/src/content/posts/en/*
+          rm -rf starter/src/content/posts/fr/*
+
+          # Copy starter-specific content
+          cp source/.starter/content/posts/en/getting-started.md starter/src/content/posts/en/
+          cp source/.starter/content/posts/fr/getting-started.md starter/src/content/posts/fr/
+
+          # Copy starter README (replaces main repo README)
+          cp source/.starter/README.md starter/README.md
+
+          # Copy starter-specific deploy workflow
+          mkdir -p starter/.github/workflows
+          cp source/.starter/workflows/deploy.yml starter/.github/workflows/deploy.yml
+
+      - name: Push changes
+        shell: bash
+        working-directory: starter
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to sync."
+            exit 0
+          fi
+
+          git commit -m "sync: update from chirping-astro@${GITHUB_SHA::7} [skip ci]"
+          git push
