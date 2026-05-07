@@ -20,7 +20,6 @@ comments: false
 
 ![image](/posts/ute-freshman-2026/attachments/pic_2.png)
 
-
 **Solution:**
 
 Đề bài nhắc đến **Shamir's Secret Sharing** và cung cấp file `chall.py`.
@@ -60,6 +59,7 @@ Share đầu tiên đã được cung cấp trực tiếp:
 ```
 
 #### 🟠 Viên ngọc rồng 2 – Nhiều lớp encode
+
 ![image](/posts/ute-freshman-2026/attachments/pic_5.png)
 
 Share thứ 2 bị mã hóa qua nhiều lớp encode, mỗi lớp đều có tiền tố dạng:
@@ -87,10 +87,10 @@ RSA sử dụng cặp số nguyên tố **p và q quá gần nhau**.
 
 Áp dụng **Fermat Factorization** để phân tích `N`:
 
-1. Tìm được `p` và `q`  
-2. Tính lại `φ(n)`  
-3. Tìm `d`  
-4. Giải mã ciphertext để lấy share  
+1. Tìm được `p` và `q`
+2. Tính lại `φ(n)`
+3. Tìm `d`
+4. Giải mã ciphertext để lấy share
 
 Kết quả:
 
@@ -107,7 +107,7 @@ Kết quả:
 Biết plaintext của `cipher1`, ta có:
 
 ```
-C = P ⊕ K  
+C = P ⊕ K
 ⇒ K = C ⊕ P
 ```
 
@@ -116,6 +116,7 @@ Sau khi khôi phục được **keystream K**, ta dùng lại để giải mã `
 ```
 P_flag = C_flag ⊕ K
 ```
+
 => Đây là lỗi bảo mật: **Two-time pad / keystream reuse**
 
 Kết quả:
@@ -132,8 +133,8 @@ Kết quả:
 
 Các ký tự **TAB** và **SPACE** bị ẩn phía sau output `print`.
 
-- `SPACE` → 0  
-- `TAB` → 1  
+- `SPACE` → 0
+- `TAB` → 1
 
 Chuyển chuỗi nhị phân sang số nguyên ta được share:
 
@@ -152,9 +153,9 @@ Plaintext này lại bị XOR với **một chuỗi con của secret**, rồi tr
 
 Cách giải:
 
-1. Bruteforce tất cả chuỗi con có thể  
-2. Giải mã ra nhiều plaintext ứng viên  
-3. Dùng **frequency analysis** (tần suất chữ cái tiếng Anh) để chọn plaintext hợp lý nhất  
+1. Bruteforce tất cả chuỗi con có thể
+2. Giải mã ra nhiều plaintext ứng viên
+3. Dùng **frequency analysis** (tần suất chữ cái tiếng Anh) để chọn plaintext hợp lý nhất
 
 Kết quả:
 
