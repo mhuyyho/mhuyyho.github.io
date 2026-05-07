@@ -1,0 +1,39 @@
+name: Build CV from LaTeX
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'cv/**'
+  workflow_dispatch:
+
+jobs:
+  build-cv:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install TeX + poppler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra texlive-xetex texlive-luatex \
+            poppler-utils
+
+      - name: Run build script
+        run: |
+          chmod +x scripts/build-cv.sh
+          ./scripts/build-cv.sh cv/cv.tex public/cv
+
+      - name: Commit generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/cv/cv.pdf public/cv/cv_1.png public/cv/cv_2.png || true
+          git commit -m "Build CV from .tex [ci skip]" || echo "No changes to commit"
+          git push || echo "Push failed"

@@ -148,7 +148,7 @@ export async function getCategoriesWithCount(
 }
 
 /** Group posts by year -> month for the archives page. */
-export function groupByYearMonth(posts: Post[]): Array<{
+export function groupByYearMonth(posts: Post[], locale?: Locale): Array<{
   year: number;
   months: Array<{ month: number; label: string; posts: Post[] }>;
 }> {
@@ -163,7 +163,7 @@ export function groupByYearMonth(posts: Post[]): Array<{
     if (!months.has(m)) months.set(m, []);
     months.get(m)!.push(post);
   }
-  const lang = 'en-US';
+  const lang = locale ?? SITE.defaultLocale;
   const fmt = new Intl.DateTimeFormat(lang, { month: 'long' });
   return Array.from(buckets.entries())
     .sort((a, b) => b[0] - a[0])

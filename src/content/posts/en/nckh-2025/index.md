@@ -4,7 +4,7 @@ description: "Bài viết trình bày kỹ thuật steganography trên PNG và J
 pubDate: 2025-05-08
 tags:
   - NCKH
-translationKey: nckh-2026
+translationKey: nckh-2025
 toc: true
 draft: false
 ---
@@ -53,7 +53,7 @@ PNG là định dạng ảnh **lossless** (nén không mất dữ liệu), sử 
 
 **Cấu trúc file PNG:**
 
-![Cấu trúc file PNG](/posts/nckh-2026/attachments/png_structor.png)
+![Cấu trúc file PNG](/posts/nckh-2025/attachments/png_structor.png)
 
 ```
 [8 bytes PNG Signature] [IHDR Chunk] [Other Chunks...] [IDAT Chunk(s)] [IEND Chunk]
@@ -90,7 +90,7 @@ JPEG là định dạng **lossy** (nén mất dữ liệu), sử dụng biến �
 
 **Cấu trúc file JPEG:**
 
-![Cấu trúc file JPEG](/posts/nckh-2026/attachments/jpeg_structor.png)
+![Cấu trúc file JPEG](/posts/nckh-2025/attachments/jpeg_structor.png)
 
 ```
 [SOI: FF D8] [APP0/APP1 Segments...] [SOF Segment] [DHT] [SOS] [Compressed Data] [EOI: FF D9]
@@ -185,7 +185,7 @@ Kết quả: Steg/steghide/secret.txt hoặc secret.txt.gz
 - Nên thử với mật khẩu rỗng trước; nếu thất bại, thử tiếp bằng wordlist phổ biến.
 - Kết quả sau khi extract được gửi trực tiếp lên **AI Agent** để phân tích nội dung.
 
-![Steghide Tab — giao diện nhập mật khẩu và xem kết quả extract](/posts/nckh-2026/attachments/img_steghide_tab.png)
+![Steghide Tab — giao diện nhập mật khẩu và xem kết quả extract](/posts/nckh-2025/attachments/img_steghide_tab.png)
 *[Ảnh minh hoạ: `img_steghide_tab.png`]*
 
 ---
@@ -250,7 +250,7 @@ UserComment > 5pWw5oiW6K+V5LqGYmFzZTY0...
 → AI Agent nhận ra: "Đây là chuỗi base64 — giải mã ra văn bản ẩn"
 ```
 
-![ExifTool output — hiển thị metadata đầy đủ của ảnh](/posts/nckh-2026/attachments/img_exiftool_tab.png)
+![ExifTool output — hiển thị metadata đầy đủ của ảnh](/posts/nckh-2025/attachments/img_exiftool_tab.png)
 *[Ảnh minh hoạ: `img_exiftool_tab.png`]*
 
 ---
@@ -329,10 +329,10 @@ Extract_SB.exe image.png output.bin True True 1 00000000 00000001 00000001 00000
 - Nếu không cho kết quả: thử MSB, thử column-first, hoặc thử các hoán vị channel order khác nhau.
 - Kết quả binary dump được gửi lên AI Agent để nhận dạng pattern.
 
-![LSB/MSB Dialog với 32 checkbox bit selection](/posts/nckh-2026/attachments/img_lsb_msb_dialog.png)
+![LSB/MSB Dialog với 32 checkbox bit selection](/posts/nckh-2025/attachments/img_lsb_msb_dialog.png)
 *[Ảnh minh hoạ: `img_lsb_msb_dialog.png`]*
 
-![Kết quả LSB extraction — binary dump](/posts/nckh-2026/attachments/img_lsb_msb_result.png)
+![Kết quả LSB extraction — binary dump](/posts/nckh-2025/attachments/img_lsb_msb_result.png)
 *[Ảnh minh hoạ: `img_lsb_msb_result.png`]*
 
 ---
@@ -369,7 +369,7 @@ Với ảnh tự nhiên, bit-plane 0 (LSB) trông như nhiễu ngẫu nhiên —
 Ngược lại, với ảnh có steganography LSB, bit-plane 0 sẽ hiển thị **cấu trúc có nghĩa** — hình dạng, chữ viết, hay pattern đều đặn. Đây là dấu hiệu trực quan rõ ràng nhất để nhận biết LSB steganography.
 
 
-![So sánh bit-plane ảnh sạch vs ảnh có steganography](/posts/nckh-2026/attachments/img_bitplane_comparison.png)
+![So sánh bit-plane ảnh sạch vs ảnh có steganography](/posts/nckh-2025/attachments/img_bitplane_comparison.png)
 *[Ảnh minh hoạ: `img_bitplane_comparison.png`]*
 
 ---
@@ -436,10 +436,10 @@ Kết quả:   XOR lộ ra chữ "FLAG{hidden_secret}" dưới dạng pattern m�
 - So sánh ảnh nghi vấn với ảnh gốc từ nguồn tin cậy để phát hiện watermark ẩn hoặc thông tin đã được nhúng.
 - Phát hiện vùng ảnh bị chỉnh sửa bằng Photoshop — các pixel bị thay đổi sẽ sáng lên trong ảnh XOR.
 
-![XOR Comparator — giao diện chọn 2 ảnh và xem kết quả](/posts/nckh-2026/attachments/img_xor_comparator.png)
+![XOR Comparator — giao diện chọn 2 ảnh và xem kết quả](/posts/nckh-2025/attachments/img_xor_comparator.png)
 *[Ảnh minh hoạ: `img_xor_comparator.png`]*
 
-![Kết quả XOR — ảnh 1, ảnh 2, và XOR result](/posts/nckh-2026/attachments/img_xor_before_after.png)
+![Kết quả XOR — ảnh 1, ảnh 2, và XOR result](/posts/nckh-2025/attachments/img_xor_before_after.png)
 *[Ảnh minh hoạ: `img_xor_before_after.png`]*
 
 ---
@@ -501,10 +501,10 @@ Bước 3: Sửa Height từ "0190" lên giá trị thực (thử "0320" = 800)
 Bước 4: Preview → phần ẩn hiện ra cùng nội dung flag
 ```
 
-![Edit Size Picture — giao diện hex editor và converter](/posts/nckh-2026/attachments/img_edit_size.png)
+![Edit Size Picture — giao diện hex editor và converter](/posts/nckh-2025/attachments/img_edit_size.png)
 *[Ảnh minh hoạ: `img_edit_size.png`]*
 
-![Trước và sau khi khôi phục header — phần ẩn được lộ ra](/posts/nckh-2026/attachments/img_editsize_restore.png)
+![Trước và sau khi khôi phục header — phần ẩn được lộ ra](/posts/nckh-2025/attachments/img_editsize_restore.png)
 *[Ảnh minh hoạ: `img_editsize_restore.png`]*
 
 ---
@@ -554,7 +554,7 @@ Kỹ thuật lower nibble B+G ít phổ biến hơn LSB thuần túy, và thư�
 - Malware sử dụng ảnh như kênh C2 communication (gửi lệnh điều khiển qua ảnh).
 - Khi LSB thông thường không cho kết quả, thử lower nibble B+G là bước logic tiếp theo.
 
-![PowerShell Extractor — output payload từ ảnh](/posts/nckh-2026/attachments/img_powershell_extractor.png)
+![PowerShell Extractor — output payload từ ảnh](/posts/nckh-2025/attachments/img_powershell_extractor.png)
 *[Ảnh minh hoạ: `img_powershell_extractor.png`]*
 
 
@@ -671,7 +671,7 @@ Output: "Ảnh được chụp lúc 08:30 ngày 15/01/2024 bằng iPhone 15 Pro.
          bằng Adobe Photoshop 2024 — đây là dấu hiệu rõ ràng cho thấy ảnh đã bị can thiệp."
 ```
 
-![AI Agent phân tích payload extract từ steganography](/posts/nckh-2026/attachments/img_ai_agent_payload.png)
+![AI Agent phân tích payload extract từ steganography](/posts/nckh-2025/attachments/img_ai_agent_payload.png)
 *[Ảnh minh hoạ: `img_ai_agent_payload.png`]*
 
 ---
@@ -693,7 +693,7 @@ Steganography không chỉ là kỹ năng dành cho CTF — kỹ thuật này đ
 
 Màn hình chính sử dụng **TreeView** với checkbox, cho phép người dùng chọn công cụ và cấu hình trực tiếp trên một giao diện duy nhất:
 
-![Main UI](/posts/nckh-2026/attachments/img_main_ui.png)
+![Main UI](/posts/nckh-2025/attachments/img_main_ui.png)
 
 **Cơ chế mutual-exclusion**: Ứng dụng không cho phép chọn đồng thời "Data Extract", "Resize Image" và "XOR Two Images". Khi một option được chọn, các option xung đột sẽ tự động bị disable (greyed-out).
 
@@ -711,7 +711,7 @@ Mỗi công cụ có một tab riêng biệt, gồm các thành phần:
 - **Nút "Send to AI"**: Cho phép kích hoạt AI Agent thủ công.
 
 Tab layout:
-![Tab layout](/posts/nckh-2026/attachments/img_tab_layout.png)
+![Tab layout](/posts/nckh-2025/attachments/img_tab_layout.png)
 
 ### 5.3 Loading Overlay
 
@@ -762,7 +762,7 @@ Password: (thử rỗng)
 - `hearme.txt` — thông điệp
 - `flag.txt` — flag CTF
 
-![Kết quả extract Steghide thành công](/posts/nckh-2026/attachments/img_steghide_result.png)
+![Kết quả extract Steghide thành công](/posts/nckh-2025/attachments/img_steghide_result.png)
 *[Ảnh minh hoạ: `img_steghide_result.png`]*
 
 ### 7.2 Thực Nghiệm: PowerShell Extractor trên ảnh CTF
@@ -773,7 +773,7 @@ Password: (thử rỗng)
 
 **Phân tích AI**: AI nhận diện chuỗi là encoded flag và đề xuất các bước giải mã tiếp theo.
 
-![PowerShell Extractor — kết quả extract payload](/posts/nckh-2026/attachments/img_psextract_result.png)
+![PowerShell Extractor — kết quả extract payload](/posts/nckh-2025/attachments/img_psextract_result.png)
 *[Ảnh minh hoạ: `img_psextract_result.png`]*
 
 ### 7.3 Thực Nghiệm: Phân Tích Bit-plane với Shift Bit Color
@@ -785,7 +785,7 @@ Password: (thử rỗng)
 **Quan sát với ảnh sạch:**
 - **Bit-plane 0**: Chỉ là nhiễu ngẫu nhiên — không có bất kỳ pattern nào nhận dạng được.
 
-![So sánh bit-plane ảnh sạch vs ảnh stego](/posts/nckh-2026/attachments/img_bitplane_comparison.png)
+![So sánh bit-plane ảnh sạch vs ảnh stego](/posts/nckh-2025/attachments/img_bitplane_comparison.png)
 *[Ảnh minh hoạ: `img_bitplane_comparison.png`]*
 
 ### 7.4 Thực Nghiệm: AI Agent Phân Tích EXIF
@@ -796,7 +796,7 @@ Password: (thử rỗng)
 
 **Thời gian phân tích**: Dưới 5 giây — so với 15–30 phút nếu phân tích thủ công.
 
-![AI Agent phân tích EXIF và định vị GPS](/posts/nckh-2026/attachments/img_ai_analysis.png)
+![AI Agent phân tích EXIF và định vị GPS](/posts/nckh-2025/attachments/img_ai_analysis.png)
 *[Ảnh minh hoạ: `img_ai_analysis.png`]*
 
 ---
