@@ -6,7 +6,7 @@ export const SITE_IMAGES = {
   ogDefault: ogDefaultImg,
 } as const;
 
-export const locales = ['en'] as const;
+export const locales = ['en', 'fr'] as const;
 export type Locale = (typeof locales)[number];
 
 const GITHUB_HANDLE = 'mhuyyho';
@@ -50,7 +50,7 @@ export const SITE: SiteConfig = {
   url: import.meta.env.SITE_URL || 'https://mhuyyho.github.io',
   locales: locales,
   defaultLocale: 'en',
-  multilingual: false,
+  multilingual: true,
 };
 
 export const NAV: readonly NavItem[] = [
