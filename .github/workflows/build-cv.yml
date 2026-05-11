@@ -5,6 +5,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - public/cv/cv.tex
+      - .github/workflows/build-cv.yml
+
+permissions:
+  contents: write
 
 jobs:
   build:
