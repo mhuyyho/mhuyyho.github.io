@@ -48,7 +48,7 @@
     "@fontsource/jetbrains-mono": "5.2.8",
     "@fontsource/lato": "5.2.7",
     "@fontsource/source-sans-3": "5.2.9",
-    "@iconify-json/lucide": "^1.2.104",
+    "@iconify-json/lucide": "^1.2.107",
     "@iconify-json/simple-icons": "^1.2.80",
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.1.0",
