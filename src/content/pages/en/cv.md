@@ -1,17 +1,21 @@
 ---
 title: CV
-description: Curriculum Vitae of Ho Minh Huy — Information Security student.
+description: Curriculum Vitae of Ho Minh Huy - Information Security student.
 translationKey: cv
 ---
 
 ## Curriculum Vitae
 
-You can download my CV as a PDF below:
+You can download the CV version that best matches your focus below:
 
-<a href="/cv/cv.pdf" target="_blank" download>📄 Download CV (PDF)</a>
+### Networking
 
-### Preview
+<a href="/cv/CV_HoMinhHuy_Networking.pdf" target="_blank" download>Download Networking CV (PDF)</a>
 
-![CV Page 1](/cv/cv_1.png)
+[![Networking CV preview](/cv/networking_1.png)](/cv/CV_HoMinhHuy_Networking.pdf)
 
-![CV Page 2](/cv/cv_2.png)
+### SOC
+
+<a href="/cv/CV_HoMinhHuy_SOC.pdf" target="_blank" download>Download SOC CV (PDF)</a>
+
+[![SOC CV preview](/cv/soc_1.png)](/cv/CV_HoMinhHuy_SOC.pdf)
